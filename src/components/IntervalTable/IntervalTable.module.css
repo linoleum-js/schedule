@@ -1,0 +1,107 @@
+
+:root {
+  --divider-width: 20px;
+  --interval-table-left-width: 200px;
+  --interval-row-height: 40px;
+  --light-grey: #f2f2f2;
+  --dark-grey: #a2aeb4;
+}
+
+.IntervalTable {
+  position: relative;
+  height: calc(100vh - 200px);
+  overflow: auto;
+}
+
+.IntervalTableWrapper {
+  position: relative;
+}
+
+.IntervalTableDividerLeft,
+.IntervalTableDividerRight {
+  width: var(--divider-width);
+  position: absolute;
+}
+
+.IntervalTableHeader {
+  display: flex;
+}
+
+.IntervalTableBody {
+  position: relative;
+}
+
+.IntervalTableRow {
+  display: flex;
+  height: var(--interval-row-height);
+  border-bottom: 1px solid var(--light-grey);
+  align-items: center;
+}
+
+.IntervalChartWrapper,
+.IntervalHeaderWrapper {
+  display: flex;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+}
+
+.IntervalChartWrapper {
+  padding-left: 200px;
+  height: 40px;
+}
+
+.IntervalHeaderWrapper {
+  top: 40px;
+}
+
+.IntervalTableName,
+.IntervalTableNameHeader {
+  width: var(--interval-table-left-width);
+  height: var(--interval-row-height);
+  flex-shrink: 0;
+  line-height: var(--interval-row-height);
+  border-right: 1px solid var(--light-grey);
+}
+
+.IntervalHeaderWrapper {
+  border-bottom: 1px solid var(--dark-grey);
+  border-top: 1px solid var(--dark-grey);
+}
+
+.IntervalTableRight {
+  position: relative;
+  flex-grow: 1;
+  padding: 0 35px;
+}
+
+.IntervalTableDividerLeft,
+.IntervalTableDividerRight {
+  height: 100%;
+  border-left: 1px solid var(--dark-grey);
+  border-right: 1px solid var(--dark-grey);
+  background-color: #fff;
+  z-index: 100;
+  cursor: pointer;
+}
+
+.IntervalTableDividerLeft {
+  left: 180px;
+  box-shadow: 7px 0px 19px 0px rgba(34, 60, 80, 0.38);
+}
+
+.IntervalTableDividerRight {
+  right: 0;
+  top: 0;
+  box-shadow: -7px 0px 19px 0px rgba(34, 60, 80, 0.38);
+  transform: translateX(100%);
+}
+
+.IntervalTableDividerLeft span,
+.IntervalTableDividerRight span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%) rotate(-90deg);
+}

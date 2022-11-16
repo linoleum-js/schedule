@@ -1,0 +1,37 @@
+
+.IntervalGrid {
+  height: 100%;
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+  padding: 0 35px;
+}
+
+.IntervalGrid > div {
+  height: 100%;
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+}
+
+.IntervalGridColumn {
+  height: 100%;
+  font-size: 12px;
+  flex: 1 1 0px;
+}
+
+.IntervalGridColumn span {
+  display: block;
+  margin-right: -1px;
+  max-height: 0;
+  text-align: center;
+  line-height: 40px;
+}
+
+.IntervalGridColumn::after {
+  content: '';
+  position: absolute;
+  background-color: var(--light-grey);
+  height: 100%;
+  width: 1px;
+}
