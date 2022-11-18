@@ -1,0 +1,57 @@
+
+.IntervalHandle {
+  position: absolute;
+  width: 1px;
+  height: 37px;
+  background-color: var(--dark-blue);
+  bottom: 0;
+  z-index: 250;
+}
+
+
+.IntervalHandleBody {
+  position: absolute;
+  font-size: 10px;
+  background-color: var(--dark-blue);
+  
+  height: 15px;
+  line-height: 15px;
+  cursor: -webkit-grab;
+  cursor: grab;
+  color: #fff;
+  padding: 0 5px;
+}
+
+.IntervalHandleLeft {
+  left: 0;
+}
+
+.IntervalHandleLeft .IntervalHandleBody {
+  right: 0;
+}
+
+
+.IntervalHandleRight {
+  right: 0;
+}
+
+.IntervalHandleLeft .IntervalHandleBody:before,
+.IntervalHandleRight .IntervalHandleBody:after {
+  content: ' ';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+}
+
+.IntervalHandleLeft .IntervalHandleBody:before {
+  border-width: 7.5px 5px 7.5px 0;
+  border-color: transparent var(--dark-blue) transparent transparent;
+  left: -5px;
+}
+
+.IntervalHandleRight .IntervalHandleBody:after {
+  border-width: 7.5px 0 7.5px 5px;
+  border-color: transparent transparent transparent var(--dark-blue);
+  right: -5px;
+}

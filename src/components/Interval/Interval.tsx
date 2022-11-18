@@ -17,7 +17,11 @@ export const Interval = (props: IntervalProps) => {
     <div className={styles.Interval}>
       {props.data.map((item) => {
         return (
-          <IntervalItem onMove={onMove} data={item} key={item.id} />
+          <IntervalItem
+            onMove={onMove}
+            data={item}
+            key={item.id}
+          />
         );
       })}
     </div>

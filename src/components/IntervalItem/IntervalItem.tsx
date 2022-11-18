@@ -1,9 +1,11 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import IntervalItemBody from '../IntervalItemBody/IntervalItemBody';
-import { MovementData, ScheduleIntervalData, ActivityTypeEmpty } from '@/models';
+import { IntervalHandle } from '../IntervalHandle/IntervalHandle';
+
+import { MovementData, ScheduleIntervalData, ActivityTypeEmpty, Direction } from '@/models';
 import { AppState } from '@/redux';
 import { stepSizeInMinutes } from '@/constants';
 import { minutesToPixels } from '@/util';
@@ -31,6 +33,8 @@ const getBg = (type: string | number) => {
 
 export const IntervalItem = (props: IntervalItemProps) => {
   const uiState = useSelector((state: AppState) => state.uiState);
+  const [isInFocus, setIsInFocus] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
 
@@ -46,17 +50,50 @@ export const IntervalItem = (props: IntervalItemProps) => {
     backgroundColor: getBg(props.data.type)
   };
 
+  const isEmpty = props.data.type === ActivityTypeEmpty;
+
+  const onFocus = () => setIsInFocus(true);
+  const onBlur = (event: PointerEvent) => {
+    // @ts-ignore
+    if (!ref.current?.contains(event.target)) {
+      setIsInFocus(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('pointerdown', onBlur);
+    return () => {
+      document.removeEventListener('pointerdown', onBlur);
+    };
+  });
+
+  const onLeftMove = () => {};
+
+  const onLeftMoveEnd = () => {};
+
+  const onRightMove = () => {};
+
+  const onRightMoveEnd = () => {};
+
+
   const onBodyMove = (data: any) => {
     console.log('onBodyMove', data);
   };
 
+  const onBodyMoveEnd = () => {};
+
   return (
-    <div className={styles.IntervalItem} style={css}>
-      {/* <div style={{ position: 'absolute', backgroundColor: '#000', left: '-10px', zIndex: 200 }}>flag</div> */}
+    <div
+      className={styles.IntervalItem}
+      style={css} onPointerDown={onFocus}
+      ref={ref}
+    >
+      {!isEmpty && isInFocus && <IntervalHandle direction={Direction.Left} onMove={onLeftMove} onMoveEnd={onLeftMoveEnd} />}
       <IntervalItemBody
         onMove={onBodyMove}
-        onMoveEnd={() => {}}
+        onMoveEnd={onBodyMoveEnd}
       />
+      {!isEmpty && isInFocus && <IntervalHandle direction={Direction.Right} onMove={onRightMove} onMoveEnd={onRightMoveEnd} />}
     </div>
   );
 };

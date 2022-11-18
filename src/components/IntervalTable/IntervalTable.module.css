@@ -5,6 +5,7 @@
   --interval-row-height: 40px;
   --light-grey: #f2f2f2;
   --dark-grey: #a2aeb4;
+  --dark-blue: #2f4050;
 }
 
 .IntervalTable {
@@ -50,6 +51,7 @@
 .IntervalChartWrapper {
   padding-left: 200px;
   height: 40px;
+  z-index: 300;
 }
 
 .IntervalHeaderWrapper {
@@ -73,7 +75,7 @@
 .IntervalTableRight {
   position: relative;
   flex-grow: 1;
-  padding: 0 35px;
+  /* padding: 0 35px; */
 }
 
 .IntervalTableDividerLeft,

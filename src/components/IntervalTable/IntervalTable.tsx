@@ -1,6 +1,6 @@
 
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import clsx from 'clsx';
 
 import { IntervalGrid } from './IntervalGrid/IntervalGrid';
 import { Interval } from '@/components/Interval/Interval';
@@ -9,7 +9,6 @@ import { ScheduleData } from '@/models';
 import { fetchScheduleList } from '@/redux/scheduleLists/scheduleListsStore'; 
 
 import styles from './IntervalTable.module.css';
-import { useEffect } from 'react';
 
 
 const users = [{
@@ -73,7 +72,7 @@ export const IntervalTable = () => {
         </div>
 
         <div className={styles.IntervalTableBody}>
-          <div style={{ display: 'flex', position: 'absolute', width: '100%', height: '100%', paddingLeft: '235px', paddingRight: '35px', justifyContent: 'space-between', marginLeft: '1px' }}>
+          <div style={{ display: 'flex', position: 'absolute', width: '100%', height: '100%', paddingLeft: '200px', justifyContent: 'space-between', marginLeft: '1px' }}>
             {generateGridLabels().map((item, index) => {
               return (
                 <div key={index} style={{ borderRight: '1px solid var(--light-grey)', height: '100%', flexGrow: 1 }} />
@@ -85,7 +84,9 @@ export const IntervalTable = () => {
               <div className={styles.IntervalTableRow} key={item.id}>
                 <div className={styles.IntervalTableName}>{item.userName}</div>
                 <div className={styles.IntervalTableRight}>
-                  <Interval data={item.list} />
+                  <Interval
+                    data={item.list}
+                  />
                 </div>
               </div>
             );
