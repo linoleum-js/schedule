@@ -3,6 +3,7 @@ import clsx from 'clsx';
 
 import { Direction } from '@/models';
 import { movableElement, MovableElementProps } from '../MovableElement/MovableElement';
+import { movableElement2 } from '../MovableElement/MovableElement2';
 
 import styles from './IntervalHandle.module.css';
 
@@ -29,4 +30,4 @@ const IntervalHandleComponent = (props: IntervalHandleProps) => {
 };
 
 // TODO remove any
-export const IntervalHandle = movableElement<any>(IntervalHandleComponent);
+export const IntervalHandle = movableElement2<any>(IntervalHandleComponent);

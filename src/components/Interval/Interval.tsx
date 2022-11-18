@@ -17,20 +17,22 @@ type IntervalProps = {
 const INTERVAL_MIN_WIDTH = 15;
 
 export const Interval = (props: IntervalProps) => {
-  const { item, onChange } = props;
+  // const { item, onChange } = props;
   // const { list } = item;
 
   // @ts-ignore
-  // const list: ScheduleIntervalData[] = useSelector((state: AppState) => state.scheduleLists.present.list.find((item) => item.id === props.item.id)?.list);
-  // console.log('list from store', list);
-  // const dispatch = useDispatch();
-  const [localList, setLocalList] = useState<ScheduleIntervalData[]>([{
-      start: 420,
-      end: 720,
-      type: '2',
-      id: '444'
-    }
-  ]);
+  const item: ScheduleIntervalData[] = useSelector((state: AppState) => state.scheduleLists.present.list.find((item) => item.id === props.item.id));
+  // @ts-ignore
+  const list: ScheduleIntervalData[] = useSelector((state: AppState) => state.scheduleLists.present.list.find((item) => item.id === props.item.id)?.list);
+  console.log('list from store', list);
+  const dispatch = useDispatch();
+  // const [localList, setLocalList] = useState<ScheduleIntervalData[]>([{
+  //     start: 420,
+  //     end: 720,
+  //     type: '2',
+  //     id: '444'
+  //   }
+  // ]);
 
   const tmpRef = useRef<any>(null)
 
@@ -39,7 +41,7 @@ export const Interval = (props: IntervalProps) => {
   //   setLocalList(list);
   // }, []);
 
-  const getUpdatedData = (movementData: MovementData, id: string) => {
+  const getUpdatedData = (localList: any[], movementData: MovementData, id: string) => {
 
     const { distance, direction } = movementData;
     const currentItemIndex = localList.findIndex((item) => item.id === id);
@@ -89,14 +91,15 @@ export const Interval = (props: IntervalProps) => {
 
     //   return newList;
     // });
-    const newList = getUpdatedData(movementData, id);
-    setLocalList(newList);
+    const newList = getUpdatedData(list, movementData, id);
+    // setLocalList(newList);
+    dispatch(updateSchedule({ ...item, list: newList }));
   };
 
-  console.log('setLocalList from render', localList[0]);
+  console.log('setLocalList from render', list[0]);
 
   const onMoveEnd = (data: any, id: any) => {
-    console.log('onMoveEnd', localList[0]);
+    console.log('onMoveEnd', list[0]);
     // setLocalList((localList: any): any => {
     //   dispatch(updateSchedule(getNewData()));
     //   return localList;
@@ -112,7 +115,7 @@ export const Interval = (props: IntervalProps) => {
 
   return (
     <div className={styles.Interval}>
-      {localList.map((item) => {
+      {list.map((item) => {
         return (
           <IntervalItem
             onMove={onMove}
