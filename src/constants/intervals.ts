@@ -1,2 +1,2 @@
 export const scheduleLengthInMinutes = 24 * 60;
-export const stepSizeInMinutes = 15;
+export const stepSizeInMinutes = 5;

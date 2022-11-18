@@ -52,7 +52,7 @@ export const fillScheduleWithEmpty = (data: ScheduleData): ScheduleData => {
       }
     } else {
       const prev: ScheduleIntervalData = list[index - 1];
-      if (prev.end !== item.start) {
+      if (prev && prev.end !== item.start) {
         newList.push(buildIntervalData(prev.end, item.start, ActivityTypeEmpty));
       }
     }
@@ -128,6 +128,10 @@ export const generateIds = (data: ScheduleData): ScheduleData => {
 
 export const minutesToPixels = (minute: number, stepSizeInMinutes: number, stepSizeInPixels: number) => {
   return minute / stepSizeInMinutes * stepSizeInPixels;
+};
+
+export const roundTo = (value: number, step: number) => {
+  return Math.floor(value / step) * step;
 };
 
 export const pixelsToMinutes = (pixel: number, stepSizeInMinutes: number, stepSizeInPixels: number) => {

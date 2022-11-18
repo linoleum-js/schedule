@@ -11,6 +11,7 @@ import store from './redux/store';
 // TODO add linters
 // TODO remove assets
 // TODO split instead of create
+// TODO rename css vars? reorganize them?
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // <React.StrictMode>
     <Provider store={store}>

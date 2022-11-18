@@ -45,14 +45,25 @@ const generateGridLabels = () => {
 };
 
 export const IntervalTable = () => {
-
   const dispatch = useDispatch();
   const data = useSelector((state: AppState) => state.scheduleLists.present);
+  const { list } = data;
   const uiState = useSelector((state: AppState) => state.uiState);
 
   useEffect(() => {
     dispatch(fetchScheduleList());
   }, []);
+
+  // console.log('list table', list);
+
+  // useEffect(() => {
+  //   setList(data.list);
+  // }, [data]);
+
+  const onChange = (schedule: ScheduleData) => {
+    const scheduleIndex = list.findIndex((item) => item.id === schedule.id);
+    // setList([ ...list.slice(0, scheduleIndex), schedule, ...list.slice(scheduleIndex + 1) ]);
+  };
 
   return (
     <div className={styles.IntervalTableWrapper}>
@@ -79,13 +90,14 @@ export const IntervalTable = () => {
               );
             })}
           </div>
-          {data.list.map((item: ScheduleData) => {
+          {list.map((item: ScheduleData) => {
             return (
               <div className={styles.IntervalTableRow} key={item.id}>
                 <div className={styles.IntervalTableName}>{item.userName}</div>
                 <div className={styles.IntervalTableRight}>
                   <Interval
-                    data={item.list}
+                    item={item}
+                    onChange={onChange}
                   />
                 </div>
               </div>

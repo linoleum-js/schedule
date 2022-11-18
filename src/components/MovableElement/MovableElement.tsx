@@ -11,7 +11,8 @@ import { stepSizeInMinutes } from '@/constants';
 
 export interface MovableElementProps {
   onMove: (data: MovementData) => void;
-  onMoveEnd: (data: MovementData) => void;
+  onMoveEnd: () => void;
+  name?: string;
 }
 
 export function movableElement<T extends MovableElementProps> (
@@ -30,6 +31,7 @@ export function movableElement<T extends MovableElementProps> (
       }
       const { pageX } = event;
       const diff = pageX - lastX.current;
+      // console.log('pageX, lastX.current', pageX, lastX.current);
       onMove({
         distance: pixelsToMinutes(Math.abs(diff), stepSizeInMinutes, uiState.stepSizeInPixels),
         direction: diff > 0 ? Direction.Right : Direction.Left
@@ -37,19 +39,14 @@ export function movableElement<T extends MovableElementProps> (
     };
 
     const throttledMouseMove = useMemo(
-      () => throttle(onMouseMove, 50),
+      () => throttle(onMouseMove, 70),
       []
     );
+    // const throttledMouseMove = onMouseMove;
     
-    const onDragEnd = (event: PointerEvent) => {
-      const { pageX } = event;
-      const diff = pageX - lastX.current;
-
+    const onDragEnd = () => {
       if (isDragging.current) {
-        onMoveEnd({
-        distance: Math.abs(diff),
-        direction: diff > 0 ? Direction.Right : Direction.Left
-      });
+        onMoveEnd();
       }
       isDragging.current = false;
     };
@@ -62,11 +59,11 @@ export function movableElement<T extends MovableElementProps> (
     };
 
     useEffect(() => {
-      document.addEventListener('mousemove', throttledMouseMove);
-      document.addEventListener('pointerup', onDragEnd);
+      document.addEventListener('mousemove', throttledMouseMove, false);
+      document.addEventListener('pointerup', onDragEnd, false);
       return () => {
-        document.removeEventListener('mousemove', throttledMouseMove);
-        document.removeEventListener('pointerup', onDragEnd);
+        document.removeEventListener('mousemove', throttledMouseMove, false);
+        document.removeEventListener('pointerup', onDragEnd, false);
       };
     });
 
