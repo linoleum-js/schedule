@@ -1,11 +1,13 @@
 import {
-  movableElement2, MovableElementProps
-} from '../MovableElement/MovableElement2';
+  movableElement, MovableElementProps
+} from '../MovableElement/MovableElement';
 
 import styles from './IntervalItemBody.module.css';
 
 const IntervalItemBody = () => {
-  return <div className={`${styles.IntervalItemBody}`}></div>;
+  return (
+    <div className={`${styles.IntervalItemBody}`} />
+  );
 };
 
-export default movableElement2<MovableElementProps>(IntervalItemBody);
+export default movableElement<MovableElementProps>(IntervalItemBody);

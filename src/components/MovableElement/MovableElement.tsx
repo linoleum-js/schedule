@@ -1,18 +1,16 @@
 
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { throttle } from 'lodash';
+import { useThrottleCallback } from '@react-hook/throttle';
 
-import { MovementData, Direction } from '@/models';
-import { AppState } from '@/redux';
+import { STEP_SIZE_IN_MINUTES } from '@/constants';
+import { Direction, MovementData } from '@/models';
+import { AppState } from '@/redux/store';
 import { pixelsToMinutes } from '@/util';
-import { stepSizeInMinutes } from '@/constants';
-
 
 export interface MovableElementProps {
   onMove: (data: MovementData) => void;
   onMoveEnd: () => void;
-  name?: string;
 }
 
 export function movableElement<T extends MovableElementProps> (
@@ -20,28 +18,10 @@ export function movableElement<T extends MovableElementProps> (
 ) {
   return function MovableElement (props: T) {
     const uiState = useSelector((state: AppState) => state.uiState);
+    const { stepSizeInPixels } = uiState;
+    const { onMove, onMoveEnd } = props;
     const isDragging = useRef(false);
     const lastX = useRef(0);
-
-    const { onMove, onMoveEnd } = props;
-
-    const onMouseMove = (event: MouseEvent) => {
-      if (!isDragging.current) {
-        return;
-      }
-      const { pageX } = event;
-      const diff = pageX - lastX.current;
-      onMove({
-        distance: pixelsToMinutes(Math.abs(diff), stepSizeInMinutes, uiState.stepSizeInPixels),
-        direction: diff > 0 ? Direction.Right : Direction.Left
-      });
-    };
-
-    const throttledMouseMove = useMemo(
-      () => throttle(onMouseMove, 70),
-      []
-    );
-    // const throttledMouseMove = onMouseMove;
     
     const onDragEnd = () => {
       if (isDragging.current) {
@@ -57,19 +37,39 @@ export function movableElement<T extends MovableElementProps> (
       isDragging.current = true;
     };
 
+    const onMouseMove = (event: MouseEvent) => {
+      if (!isDragging.current) {
+        return;
+      }
+
+      const { pageX } = event;
+
+      const diff = pageX - lastX.current;
+      if (!diff) {
+        return;
+      }
+      const direction = diff > 0 ? Direction.Right : Direction.Left;
+      onMove({
+        distance: pixelsToMinutes(Math.abs(diff), STEP_SIZE_IN_MINUTES, stepSizeInPixels),
+        direction
+      });
+      lastX.current = pageX;
+    };
+
+    const throttledMouseMove = useThrottleCallback(onMouseMove, 150);
+
     useEffect(() => {
-      document.addEventListener('mousemove', throttledMouseMove, false);
-      document.addEventListener('pointerup', onDragEnd, false);
+      document.addEventListener('mousemove', throttledMouseMove);
+      document.addEventListener('pointerup', onDragEnd);
       return () => {
-        document.removeEventListener('mousemove', throttledMouseMove, false);
-        document.removeEventListener('pointerup', onDragEnd, false);
+        document.removeEventListener('mousemove', throttledMouseMove);
+        document.removeEventListener('pointerup', onDragEnd);
       };
     });
 
+    
     return (
-      <div
-        onPointerDown={onDragStart}
-      >
+      <div onPointerDown={onDragStart}>
         <Component {...props} />
       </div>
     );

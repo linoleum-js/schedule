@@ -1,7 +1,7 @@
 
 import { ActivityType } from './ActivityType';
 
-export interface ScheduleIntervalData {
+export interface IntervalData {
   start: number;
   end: number;
   type: ActivityType;

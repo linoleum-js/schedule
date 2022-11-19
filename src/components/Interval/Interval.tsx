@@ -2,12 +2,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
 
-import { isEqual } from 'lodash';
-
 import { IntervalItem } from '../IntervalItem/IntervalItem';
-import { Direction, MovementData, ScheduleData, ScheduleIntervalData } from '@/models';
+import { Direction, MovementData, ScheduleData, IntervalData } from '@/models';
 import { AppState, updateSchedule } from '@/redux';
-import { scheduleLengthInMinutes } from '@/constants';
+import { INTERVAL_MIN_WIDTH } from '@/constants';
+import { collapseSameType } from '@/util';
 
 import styles from './Interval.module.css';
 
@@ -16,70 +15,95 @@ type IntervalProps = {
   onChange: (data: ScheduleData) => void;
 };
 
-const INTERVAL_MIN_WIDTH = 15;
+/**
+ * find closest item to the left that starts before the current item's new start position
+ */
+const getClosestLeftIndex = (list: IntervalData[], currentItem: IntervalData) => {
+  const currentItemIndex = list.findIndex((item) => item.id === currentItem.id);
+  let closesLeftIndex = -1;
+  for (let i = currentItemIndex - 1; i >= 0; i--) {
+    const item = list[i];
+    if (item.start + INTERVAL_MIN_WIDTH <= currentItem.start) {
+      closesLeftIndex = i;
+      break;
+    }
+  }
+  return closesLeftIndex;
+};
+
+/**
+ * find closest item to the right that ends after the current item's new end position
+ */
+const getClosestRightIndex = (list: IntervalData[], currentItem: IntervalData) => {
+  const currentItemIndex = list.findIndex((item) => item.id === currentItem.id);
+  let closesRightIndex = -1;
+  for (let i = currentItemIndex + 1; i < list.length; i++) {
+    const item = list[i];
+    if (item.end - INTERVAL_MIN_WIDTH >= currentItem.end) {
+      closesRightIndex = i;
+      break;
+    }
+  }
+  return closesRightIndex;
+};
+
+// TODO util
+const updateItemById = (list: any[], id: any, data: any) => {
+  const index = list.findIndex((item) => item.id === id);
+  list[index] = { ...list[index], ...data };
+  return list;
+};
 
 export const Interval = (props: IntervalProps) => {
-  const { item, onChange } = props;
+  const { item } = props;
   const { list } = item;
 
   const dispatch = useDispatch();
-  const [localList, setLocalList] = useState<ScheduleIntervalData[]>(list);
-
-  const tmpRef = useRef<any>(null)
+  const [localList, setLocalList] = useState<IntervalData[]>(list);
 
   useEffect(() => {
     setLocalList(list);
   }, [list]);
 
-  const getUpdatedData = (localList: any[], movementData: MovementData, id: string) => {
+  const getUpdatedData = (currentItem: IntervalData) => {
+    const currentItemIndex = localList.findIndex((item) => item.id === currentItem.id);
+    let newList: IntervalData[] = [];
 
-    const { distance, direction } = movementData;
-    const currentItemIndex = localList.findIndex((item) => item.id === id);
-    const currentItem = { ...localList[currentItemIndex] };
-    const diff = direction === Direction.Left ? -distance : distance;
-    let newList: ScheduleIntervalData[] = [];
-    if (direction === Direction.Left) {
-      currentItem.start += diff;
-      // TODO ensure min
-      if (currentItem.start < 0) {
-        currentItem.start = 0;
-      }
-      // find closest item to the left that starts before the current item's new start position
-      let closesLeftIndex = -1;
-      for (let i = 0; i < currentItemIndex; i++) {
-        const item = localList[i];
-        if (item.start + INTERVAL_MIN_WIDTH <= currentItem.start) {
-          closesLeftIndex = i;
-          break;
-        }
-      }
+    const closesLeftIndex = getClosestLeftIndex(localList, currentItem);
+    const closestLeftItem = localList[closesLeftIndex];
+    const closestRightIndex = getClosestRightIndex(localList, currentItem);
+    const closestRightItem = localList[closestRightIndex];
 
-      if (closesLeftIndex === -1) {
-        newList = [currentItem, ...localList.slice(currentItemIndex + 1)];
-      } else {
-        newList = [...localList.slice(0, currentItemIndex), currentItem, ...localList.slice(currentItemIndex + 1)];
-      }
-    } else {
-      currentItem.start += diff;
-      // TODO ensure max
-      if (currentItem.end > scheduleLengthInMinutes - INTERVAL_MIN_WIDTH) {
-        currentItem.end = scheduleLengthInMinutes - INTERVAL_MIN_WIDTH;
-      }
-      newList = [...localList.slice(0, currentItemIndex), currentItem, ...localList.slice(currentItemIndex + 1)];
+    newList = [...localList.slice(0, closesLeftIndex + 1), currentItem, ...localList.slice(closestRightIndex)];
+    if (closesLeftIndex !== -1) {
+      newList = updateItemById(newList, closestLeftItem.id, { end: currentItem.start });
+    }
+    if (closestRightIndex !== -1) {
+      newList = updateItemById(newList, closestRightItem.id, { start: currentItem.end });
     }
 
-    return newList;
+    return collapseSameType(newList);
   };
 
-  const onMove = (movementData: MovementData, id: string) => {
-    const newList = getUpdatedData(localList, movementData, id);
+  const updateItemPosition = (currentItem: IntervalData) => {
+    const currentItemIndex = localList.findIndex((item) => item.id === currentItem.id);
+    let newList: IntervalData[] = [];
+
+    newList = [...localList.slice(0, currentItemIndex), currentItem, ...localList.slice(currentItemIndex)];
+
+    return collapseSameType(newList);
+  };
+
+  const onMove = (data: IntervalData) => {
+    const newList = updateItemPosition(data);
     setLocalList(newList);
   };;
 
-  const onMoveEnd = (data: any, id: any) => {
+  const onMoveEnd = (data: IntervalData) => {
+    const newList = getUpdatedData(data);
     dispatch(updateSchedule({
       ...item,
-      list: localList
+      list: newList
     }));
   };
 

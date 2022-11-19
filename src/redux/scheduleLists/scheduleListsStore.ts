@@ -13,24 +13,24 @@ const schedule: any = {
   id: '123123',
   userName: '123123',
   list: [
-  //   {
-  //   start: 0,
-  //   end: 60,
-  //   type: 1,
-  //   id: '111'
-  // },
-  // {
-  //   start: 120,
-  //   end: 180,
-  //   type: 2,
-  //   id: '222'
-  // }
-  // , {
-  //   start: 240,
-  //   end: 300,
-  //   type: 2,
-  //   id: '333'
-  // }
+    {
+    start: 0,
+    end: 60,
+    type: 1,
+    id: '111'
+  },
+  {
+    start: 120,
+    end: 180,
+    type: 2,
+    id: '222'
+  }
+  , {
+    start: 240,
+    end: 300,
+    type: 2,
+    id: '333'
+  }
   , {
     start: 360,
     end: 720,
@@ -72,37 +72,36 @@ const schedule1: any = {
 };
 
 const names = [
-
-'Cleo Bowes',
-// 'Jagdeep Cairns',
-// 'Anisa Olsen',
-// 'Asiyah Wilson',
-// 'Kelsi Stevenson',
-// 'Benas Stott',
-// 'Caleb Hubbard',
-// 'Nikola Stone',
-// 'Shauna Mckenzie',
-// 'Shakira Hess',
-// 'Ed Cohen',
-// 'Denny Cochran',
-// 'Irfan Mueller',
-// 'Krista Rodriguez',
-// 'Fannie Dalton',
-// 'Alix Gould',
-// 'Kajetan Robbins',
-// 'Cheyenne Watts',
-// 'Eshaal Nash',
-// 'Jena Bowman',
-// 'Seb Irwin',
-// 'Luella Simpson',
-// 'Madeeha Friedman',
-// 'Bree Whitworth',
-// 'Horace Burch',
-// 'Wilfred Beech',
-// 'India Jenkins',
-// 'Mared Morales',
-// 'Izabel Hobbs',
-// 'Lincoln Richard',
+  'Cleo Bowes',
+  'Jagdeep Cairns',
+  'Anisa Olsen',
+  'Asiyah Wilson',
+  'Kelsi Stevenson',
+  'Benas Stott',
+  'Caleb Hubbard',
+  'Nikola Stone',
+  'Shauna Mckenzie',
+  'Shakira Hess',
+  'Ed Cohen',
+  'Denny Cochran',
+  'Irfan Mueller',
+  'Krista Rodriguez',
+  'Fannie Dalton',
+  'Alix Gould',
+  'Kajetan Robbins',
+  'Cheyenne Watts',
+  'Eshaal Nash',
+  'Jena Bowman',
+  'Seb Irwin',
+  'Luella Simpson',
+  'Madeeha Friedman',
+  'Bree Whitworth',
+  'Horace Burch',
+  'Wilfred Beech',
+  'India Jenkins',
+  'Mared Morales',
+  'Izabel Hobbs',
+  'Lincoln Richard',
 ];
 
 const generateUsers = () => {
@@ -223,7 +222,7 @@ const scheduleListsReducerBody: Reducer<ScheduleListState> = (
 
       return {
         isLoading: false,
-        list: [...prevItems, addEmptyBoundaries(schedule), ...nextItems]
+        list: [...prevItems, fillScheduleWithEmpty(schedule), ...nextItems]
       };
   }
 

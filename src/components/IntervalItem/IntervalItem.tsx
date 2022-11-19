@@ -5,22 +5,18 @@ import { useSelector } from 'react-redux';
 import IntervalItemBody from '../IntervalItemBody/IntervalItemBody';
 import { IntervalHandle } from '../IntervalHandle/IntervalHandle';
 
-import { MovementData, ScheduleIntervalData, ActivityTypeEmpty, Direction } from '@/models';
+import { MovementData, IntervalData, ActivityTypeEmpty, Direction } from '@/models';
 import { AppState } from '@/redux';
-import { stepSizeInMinutes } from '@/constants';
-import { minutesToPixels, roundTo } from '@/util';
+import { INTERVAL_MIN_WIDTH, SCHEDULE_LENGTH, STEP_SIZE_IN_MINUTES } from '@/constants';
+import { minutesToPixels, roundTo, getSignedDistance } from '@/util';
 
 import styles from './IntervalItem.module.css';
 
-/**
- * 
- */
-
 
 interface IntervalItemProps {
-  onMove: (movementData: MovementData, id: string) => void;
-  onMoveEnd: (movementData?: MovementData, id?: string) => void;
-  data: ScheduleIntervalData;
+  onMove: (data: IntervalData) => void;
+  onMoveEnd: (data: IntervalData) => void;
+  data: IntervalData;
 }
 
 // TODO create utility
@@ -32,31 +28,34 @@ const getBg = (type: string | number) => {
   }[type];
 };
 
+export const minutesToPixels2 = (minute: number, stepSizeInMinutes: number, stepSizeInPixels: number) => {
+  return minute * stepSizeInPixels / stepSizeInMinutes;
+};
+
 export const IntervalItem = (props: IntervalItemProps) => {
   const uiState = useSelector((state: AppState) => state.uiState);
+  const { stepSizeInPixels, widthInPixels } = uiState;
   const [isInFocus, setIsInFocus] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
+  const { data } = props;
+  const { start, end, type, id } = data;
 
-  //   document.addEventListener('mousemove', () => {
-
-  //   });
-  // });
+  const startRounded = roundTo(start, STEP_SIZE_IN_MINUTES);
+  const endRounded = roundTo(end, STEP_SIZE_IN_MINUTES);
   
-  // TODO refactor
+  // TODO useMemo, refactor
   const css = {
-    left: roundTo(minutesToPixels(props.data.start, stepSizeInMinutes, uiState.stepSizeInPixels), uiState.stepSizeInPixels),
-    width: roundTo(minutesToPixels(props.data.end - props.data.start, stepSizeInMinutes, uiState.stepSizeInPixels), uiState.stepSizeInPixels),
-    backgroundColor: getBg(props.data.type)
+    left: roundTo(minutesToPixels(start, STEP_SIZE_IN_MINUTES, stepSizeInPixels), stepSizeInPixels),
+    right: roundTo(minutesToPixels(SCHEDULE_LENGTH - end, STEP_SIZE_IN_MINUTES, stepSizeInPixels), stepSizeInPixels),
+    backgroundColor: getBg(type)
   };
 
-  const isEmpty = props.data.type === ActivityTypeEmpty;
+  const isEmpty = type === ActivityTypeEmpty;
 
   const onFocus = () => setIsInFocus(true);
   const onBlur = (event: PointerEvent) => {
-    // @ts-ignore
-    if (!ref.current?.contains(event.target)) {
+    if (!ref.current?.contains(event.target as Element)) {
       setIsInFocus(false);
     }
   };
@@ -68,40 +67,59 @@ export const IntervalItem = (props: IntervalItemProps) => {
     };
   });
 
-  const onLeftMove = (data: MovementData) => {
-    props.onMove(data, props.data.id);
+  const getNewStart = (diff: number) => {
+    let newStart = start + diff;
+    newStart = Math.max(newStart, 0);
+    newStart = Math.min(newStart, end - INTERVAL_MIN_WIDTH);
+    return newStart;
   };
 
-  const onLeftMoveEnd = (data: MovementData) => {
-    props.onMoveEnd(data, props.data.id);
+  const getNewEnd = (diff: number) => {
+    let newEnd = end + diff;
+    newEnd = Math.max(newEnd, start + INTERVAL_MIN_WIDTH);
+    newEnd = Math.min(newEnd, SCHEDULE_LENGTH);
+    return newEnd;
   };
 
-  const onRightMove = (data: MovementData) => {};
-
-  const onRightMoveEnd = (data: MovementData) => {
-    // props.onMoveEnd(data, props.data.id);
+  // TODO rename to handle*
+  const onLeftMove = (movementData: MovementData) => {
+    const { distance, direction } = movementData;
+    const diff = getSignedDistance(distance, direction);
+    props.onMove({ ...data, start: getNewStart(diff) });
   };
 
-
-  const onBodyMove = (data: MovementData) => {
+  const onRightMove = (movementData: MovementData) => {
+    const { distance, direction } = movementData;
+    const diff = getSignedDistance(distance, direction);
+    props.onMove({ ...data, end: getNewEnd(diff) });
   };
 
-  const onBodyMoveEnd = () => {
-    // props.onMoveEnd();
+  const onBodyMove = (movementData: MovementData) => {
+    const { distance, direction } = movementData;
+    const diff = getSignedDistance(distance, direction);
+    props.onMove({ ...data, start: getNewStart(diff), end: getNewEnd(diff) });
+  };
+
+  const handleMoveEnd = () => {
+    props.onMoveEnd({ ...data });
   };
 
   return (
     <div
       className={styles.IntervalItem}
-      style={css} onPointerDown={onFocus}
+      style={css}
+      onPointerDown={onFocus}
       ref={ref}
     >
-      {!isEmpty && isInFocus && <IntervalHandle direction={Direction.Left} onMove={onLeftMove} onMoveEnd={props.onMoveEnd} value={props.data.start} />}
-      {!isEmpty && <IntervalItemBody
-        onMove={onBodyMove}
-        onMoveEnd={onBodyMoveEnd}
-      />}
-      {!isEmpty && isInFocus && <IntervalHandle direction={Direction.Right} onMove={onRightMove} onMoveEnd={props.onMoveEnd} />}
+      {!isEmpty && isInFocus && (
+        <IntervalHandle direction={Direction.Left} onMove={onLeftMove} onMoveEnd={handleMoveEnd} value={startRounded} />
+      )}
+      {!isEmpty && (
+        <IntervalItemBody onMove={onBodyMove} onMoveEnd={handleMoveEnd} />
+      )}
+      {!isEmpty && isInFocus && (
+        <IntervalHandle direction={Direction.Right} onMove={onRightMove} onMoveEnd={handleMoveEnd} value={endRounded} />
+      )}
     </div>
   );
 };

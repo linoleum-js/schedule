@@ -1,1 +1,1 @@
-export * from './intervals';
+export * from './interval';

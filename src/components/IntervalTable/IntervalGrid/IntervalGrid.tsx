@@ -2,13 +2,13 @@ import { throttle } from 'lodash';
 import React, { useEffect, useRef, useMemo } from 'react';
 
 import { updateUiState } from '@/redux';
-import { scheduleLengthInMinutes, stepSizeInMinutes } from '@/constants';
+import { SCHEDULE_LENGTH, STEP_SIZE_IN_MINUTES } from '@/constants';
 
 import styles from './IntervalGrid.module.css';
 import { useDispatch } from 'react-redux';
 
 
-const stepsPerDay = scheduleLengthInMinutes / stepSizeInMinutes;
+const stepsPerDay = SCHEDULE_LENGTH / STEP_SIZE_IN_MINUTES;
 
 const generateHourLabels = () => {
   const hours = 24;

@@ -1,7 +1,7 @@
-import { ScheduleIntervalData } from "./ScheduleIntervalData";
+import { IntervalData } from "./ScheduleIntervalData";
 
 export interface ScheduleData {
   id: string;
   userName: string;
-  list: ScheduleIntervalData[];
+  list: IntervalData[];
 }

@@ -1,9 +1,8 @@
 import clsx from 'clsx';
 
-
 import { Direction } from '@/models';
+import { mmToHHMM } from '@/util';
 import { movableElement, MovableElementProps } from '../MovableElement/MovableElement';
-import { movableElement2 } from '../MovableElement/MovableElement2';
 
 import styles from './IntervalHandle.module.css';
 
@@ -24,11 +23,10 @@ const IntervalHandleComponent = (props: IntervalHandleProps) => {
   return (
     <div className={classes}>
       <div className={styles.IntervalHandleBody}>
-        {Math.floor(props.value || 0)}
+        {mmToHHMM(props.value)}
       </div>
     </div>
   );
 };
 
-// TODO remove any
-export const IntervalHandle = movableElement2<any>(IntervalHandleComponent);
+export const IntervalHandle = movableElement<MovableElementProps & IntervalHandleProps>(IntervalHandleComponent);
