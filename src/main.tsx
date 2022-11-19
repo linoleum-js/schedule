@@ -14,9 +14,9 @@ import store from './redux/store';
 // TODO split instead of create
 // TODO rename css vars? reorganize them?
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <App />
     </Provider>
-  </React.StrictMode>
-)
+  // </React.StrictMode>
+);

@@ -73,7 +73,6 @@ export const IntervalItem = (props: IntervalItemProps) => {
   };
 
   const onLeftMoveEnd = (data: MovementData) => {
-    console.log('onLeftMoveEnd');
     props.onMoveEnd(data, props.data.id);
   };
 
@@ -97,12 +96,12 @@ export const IntervalItem = (props: IntervalItemProps) => {
       style={css} onPointerDown={onFocus}
       ref={ref}
     >
-      {!isEmpty && isInFocus && <IntervalHandle direction={Direction.Left} onMove={onLeftMove} onMoveEnd={onLeftMoveEnd} />}
+      {!isEmpty && isInFocus && <IntervalHandle direction={Direction.Left} onMove={onLeftMove} onMoveEnd={props.onMoveEnd} value={props.data.start} />}
       {!isEmpty && <IntervalItemBody
         onMove={onBodyMove}
         onMoveEnd={onBodyMoveEnd}
       />}
-      {!isEmpty && isInFocus && <IntervalHandle direction={Direction.Right} onMove={onRightMove} onMoveEnd={onRightMoveEnd} />}
+      {!isEmpty && isInFocus && <IntervalHandle direction={Direction.Right} onMove={onRightMove} onMoveEnd={props.onMoveEnd} />}
     </div>
   );
 };

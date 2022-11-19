@@ -54,15 +54,8 @@ export const IntervalTable = () => {
     dispatch(fetchScheduleList());
   }, []);
 
-  // console.log('list table', list);
-
-  // useEffect(() => {
-  //   setList(data.list);
-  // }, [data]);
-
   const onChange = (schedule: ScheduleData) => {
     const scheduleIndex = list.findIndex((item) => item.id === schedule.id);
-    // setList([ ...list.slice(0, scheduleIndex), schedule, ...list.slice(scheduleIndex + 1) ]);
   };
 
   return (

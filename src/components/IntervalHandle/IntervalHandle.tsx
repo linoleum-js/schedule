@@ -8,7 +8,8 @@ import { movableElement2 } from '../MovableElement/MovableElement2';
 import styles from './IntervalHandle.module.css';
 
 interface IntervalHandleProps {
-  direction: Direction
+  direction: Direction;
+  value: number;
 }
 
 const IntervalHandleComponent = (props: IntervalHandleProps) => {
@@ -23,7 +24,7 @@ const IntervalHandleComponent = (props: IntervalHandleProps) => {
   return (
     <div className={classes}>
       <div className={styles.IntervalHandleBody}>
-        17:25
+        {Math.floor(props.value || 0)}
       </div>
     </div>
   );

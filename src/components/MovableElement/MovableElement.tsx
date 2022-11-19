@@ -31,7 +31,6 @@ export function movableElement<T extends MovableElementProps> (
       }
       const { pageX } = event;
       const diff = pageX - lastX.current;
-      // console.log('pageX, lastX.current', pageX, lastX.current);
       onMove({
         distance: pixelsToMinutes(Math.abs(diff), stepSizeInMinutes, uiState.stepSizeInPixels),
         direction: diff > 0 ? Direction.Right : Direction.Left

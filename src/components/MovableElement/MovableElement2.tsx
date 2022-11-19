@@ -1,11 +1,9 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-// @ts-ignore
 import { useThrottleCallback } from '@react-hook/throttle';
 import { stepSizeInMinutes } from '@/constants';
 
-// import { getMovementdata } from '@util/scheduleInputUtil';
 import { Direction, MovementData } from '@/models';
 import { AppState } from '@/redux/store';
 import { pixelsToMinutes } from '@/util';
@@ -24,47 +22,39 @@ export function movableElement2<T extends MovableElementProps> (
     );
     const { stepSizeInPixels } = uiState;
     const { onMove, onMoveEnd } = props;
-    const [staticData] = useState({
-      isDragging: false,
-      lastX: 0
-    });
+    const isDragging = useRef(false);
+    const lastX = useRef(0);
     
     const onDragEnd = () => {
-      if (staticData.isDragging) {
+      if (isDragging.current) {
         onMoveEnd();
       }
-      staticData.isDragging = false;
+      isDragging.current = false;
     };
 
     const onDragStart = (event: React.PointerEvent) => {
       const { pageX } = event;
 
-      staticData.lastX = pageX;
-      staticData.isDragging = true;
+      lastX.current = pageX;
+      isDragging.current = true;
     };
 
     const onMouseMove = (event: MouseEvent) => {
-      if (!staticData.isDragging) {
+      if (!isDragging.current) {
         return;
       }
 
       const { pageX } = event;
-      // const movementData: MovementData = getMovementdata(
-      //   pageX, staticData.lastX, stepSizeInPixels
-      // );
-      // const { distanceInSteps, lastX } = movementData;
 
-      const diff = pageX - staticData.lastX;
+      const diff = pageX - lastX.current;
       const direction = diff > 0 ? Direction.Right : Direction.Left;
-      onMove({ distance: pixelsToMinutes(Math.abs(diff), stepSizeInMinutes, stepSizeInPixels), direction });
-      staticData.lastX = pageX;
-      // if (distanceInSteps) {
-      //   staticData.lastX = lastX;
-      //   onMove(movementData);
-      // }
+      onMove({
+        distance: pixelsToMinutes(Math.abs(diff), stepSizeInMinutes, stepSizeInPixels),
+        direction
+      });
+      lastX.current = pageX;
     };
 
-    // const throttledMouseMove = useThrottleCallback(onMouseMove, 150);
     const throttledMouseMove = useThrottleCallback(onMouseMove, 150);
 
     useEffect(() => {
