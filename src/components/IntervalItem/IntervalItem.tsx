@@ -1,6 +1,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { clamp } from 'lodash';
 
 import IntervalItemBody from '../IntervalItemBody/IntervalItemBody';
 import { IntervalHandle } from '../IntervalHandle/IntervalHandle';
@@ -11,7 +12,6 @@ import { INTERVAL_MIN_WIDTH, SCHEDULE_LENGTH, STEP_SIZE_IN_MINUTES } from '@/con
 import { minutesToPixels, roundTo, getSignedDistance } from '@/util';
 
 import styles from './IntervalItem.module.css';
-
 
 interface IntervalItemProps {
   onMove: (data: IntervalData) => void;
@@ -28,13 +28,9 @@ const getBg = (type: string | number) => {
   }[type];
 };
 
-export const minutesToPixels2 = (minute: number, stepSizeInMinutes: number, stepSizeInPixels: number) => {
-  return minute * stepSizeInPixels / stepSizeInMinutes;
-};
-
 export const IntervalItem = (props: IntervalItemProps) => {
   const uiState = useSelector((state: AppState) => state.uiState);
-  const { stepSizeInPixels, widthInPixels } = uiState;
+  const { stepSizeInPixels } = uiState;
   const [isInFocus, setIsInFocus] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -44,10 +40,14 @@ export const IntervalItem = (props: IntervalItemProps) => {
   const startRounded = roundTo(start, STEP_SIZE_IN_MINUTES);
   const endRounded = roundTo(end, STEP_SIZE_IN_MINUTES);
   
+
   // TODO useMemo, refactor
+  const left = roundTo(minutesToPixels(start, STEP_SIZE_IN_MINUTES, stepSizeInPixels), stepSizeInPixels);
+  const right = roundTo(minutesToPixels(SCHEDULE_LENGTH - end, STEP_SIZE_IN_MINUTES, stepSizeInPixels), stepSizeInPixels);
+
   const css = {
-    left: roundTo(minutesToPixels(start, STEP_SIZE_IN_MINUTES, stepSizeInPixels), stepSizeInPixels),
-    right: roundTo(minutesToPixels(SCHEDULE_LENGTH - end, STEP_SIZE_IN_MINUTES, stepSizeInPixels), stepSizeInPixels),
+    left,
+    right,
     backgroundColor: getBg(type)
   };
 
@@ -66,38 +66,42 @@ export const IntervalItem = (props: IntervalItemProps) => {
       document.removeEventListener('pointerdown', onBlur);
     };
   });
-
-  const getNewStart = (diff: number) => {
-    let newStart = start + diff;
-    newStart = Math.max(newStart, 0);
-    newStart = Math.min(newStart, end - INTERVAL_MIN_WIDTH);
-    return newStart;
-  };
-
-  const getNewEnd = (diff: number) => {
-    let newEnd = end + diff;
-    newEnd = Math.max(newEnd, start + INTERVAL_MIN_WIDTH);
-    newEnd = Math.min(newEnd, SCHEDULE_LENGTH);
-    return newEnd;
-  };
+  
+  const clampStart = (diff: number) => clamp(start + diff, 0, end - INTERVAL_MIN_WIDTH);
+  const clampEnd = (diff: number) => clamp(end + diff, start + INTERVAL_MIN_WIDTH, SCHEDULE_LENGTH);
 
   // TODO rename to handle*
   const onLeftMove = (movementData: MovementData) => {
     const { distance, direction } = movementData;
     const diff = getSignedDistance(distance, direction);
-    props.onMove({ ...data, start: getNewStart(diff) });
+    props.onMove({ ...data, start: clampStart(diff) });
   };
 
   const onRightMove = (movementData: MovementData) => {
     const { distance, direction } = movementData;
     const diff = getSignedDistance(distance, direction);
-    props.onMove({ ...data, end: getNewEnd(diff) });
+    props.onMove({ ...data, end: clampEnd(diff) });
   };
 
   const onBodyMove = (movementData: MovementData) => {
     const { distance, direction } = movementData;
     const diff = getSignedDistance(distance, direction);
-    props.onMove({ ...data, start: getNewStart(diff), end: getNewEnd(diff) });
+    let newStart;
+    let newEnd;
+    if (direction === Direction.Left) {
+      // We need to use the new value for start, otherwise (when moving to the left)
+      // in cases when the diff value is bigger than the current interval's width,
+      // the new end value may end up further to the left than the original left value.
+      newStart = clampStart(diff);
+      newEnd = clamp(end + diff, newStart + INTERVAL_MIN_WIDTH, SCHEDULE_LENGTH);
+    } else {
+      // The same applies to moving to the right, except that we need to
+      // update the right end first so the "new" space is available for the left end
+      newEnd = clampEnd(diff);
+      newStart = clamp(start + diff, 0, newEnd - INTERVAL_MIN_WIDTH);
+    }
+    const newElement = { ...data, start: newStart, end: newEnd };
+    props.onMove(newElement);
   };
 
   const handleMoveEnd = () => {

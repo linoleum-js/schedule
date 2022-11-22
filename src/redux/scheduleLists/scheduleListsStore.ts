@@ -4,7 +4,7 @@ import undoable from 'redux-undo';
 
 import { ScheduleData } from '@/models';
 import {
-  fillScheduleWithEmpty, addEmptyBoundaries, generateIds
+  fillScheduleWithEmpty, generateIds
 } from '../../util/scheduleInputUtil';
 
 
@@ -73,35 +73,35 @@ const schedule1: any = {
 
 const names = [
   'Cleo Bowes',
-  'Jagdeep Cairns',
-  'Anisa Olsen',
-  'Asiyah Wilson',
-  'Kelsi Stevenson',
-  'Benas Stott',
-  'Caleb Hubbard',
-  'Nikola Stone',
-  'Shauna Mckenzie',
-  'Shakira Hess',
-  'Ed Cohen',
-  'Denny Cochran',
-  'Irfan Mueller',
-  'Krista Rodriguez',
-  'Fannie Dalton',
-  'Alix Gould',
-  'Kajetan Robbins',
-  'Cheyenne Watts',
-  'Eshaal Nash',
-  'Jena Bowman',
-  'Seb Irwin',
-  'Luella Simpson',
-  'Madeeha Friedman',
-  'Bree Whitworth',
-  'Horace Burch',
-  'Wilfred Beech',
-  'India Jenkins',
-  'Mared Morales',
-  'Izabel Hobbs',
-  'Lincoln Richard',
+  // 'Jagdeep Cairns',
+  // 'Anisa Olsen',
+  // 'Asiyah Wilson',
+  // 'Kelsi Stevenson',
+  // 'Benas Stott',
+  // 'Caleb Hubbard',
+  // 'Nikola Stone',
+  // 'Shauna Mckenzie',
+  // 'Shakira Hess',
+  // 'Ed Cohen',
+  // 'Denny Cochran',
+  // 'Irfan Mueller',
+  // 'Krista Rodriguez',
+  // 'Fannie Dalton',
+  // 'Alix Gould',
+  // 'Kajetan Robbins',
+  // 'Cheyenne Watts',
+  // 'Eshaal Nash',
+  // 'Jena Bowman',
+  // 'Seb Irwin',
+  // 'Luella Simpson',
+  // 'Madeeha Friedman',
+  // 'Bree Whitworth',
+  // 'Horace Burch',
+  // 'Wilfred Beech',
+  // 'India Jenkins',
+  // 'Mared Morales',
+  // 'Izabel Hobbs',
+  // 'Lincoln Richard',
 ];
 
 const generateUsers = () => {

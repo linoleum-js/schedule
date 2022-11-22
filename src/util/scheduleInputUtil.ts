@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { MovementData, Direction, ScheduleData, IntervalData, ActivityType, ActivityTypeEmpty } from '@/models';
-import { SCHEDULE_LENGTH, STEP_SIZE_IN_MINUTES } from '@/constants';
+import { Direction, ScheduleData, IntervalData, ActivityType, ActivityTypeEmpty } from '@/models';
+import { SCHEDULE_LENGTH } from '@/constants';
 import { last } from 'lodash';
 
 const buildIntervalData = (start: number, end: number, type: ActivityType, id?: string) => {
@@ -12,9 +12,8 @@ const buildIntervalData = (start: number, end: number, type: ActivityType, id?: 
 
 export const pad2 = (value: string): string =>  value.padStart(2, '0');
 
-const msInMinute = 60 * 1000;
-
 export const mmToHHMM = (timeMinutes: number): string => {
+  // TODO toString? move to pad?
   const hours: string = String(Math.floor(timeMinutes / 60));
   const minutes: string = String(Math.floor(timeMinutes % 60));
   return `${pad2(hours)}:${pad2(minutes)}`;
@@ -50,25 +49,6 @@ export const fillScheduleWithEmpty = (data: ScheduleData): ScheduleData => {
   };
 };
 
-export const addEmptyBoundaries = (data: ScheduleData): ScheduleData => {
-  const { list } = data;
-  const newList: IntervalData[] = [...list];
-
-  const first = list[0];
-  if (first.start !== 0) {
-    newList.unshift(buildIntervalData(0, first.start, ActivityTypeEmpty));
-  }
-  const last = list[list.length - 1];
-  if (last.end !== SCHEDULE_LENGTH) {
-    newList.push(buildIntervalData(last.end, SCHEDULE_LENGTH, ActivityTypeEmpty));
-  }
-  return {
-    ...data,
-    list: newList
-  };
-};
-
-
 export const collapseSameType = (
   list: IntervalData[], changedItemId?: string
 ): IntervalData[] => {
@@ -96,7 +76,10 @@ export const generateIds = (data: ScheduleData): ScheduleData => {
   let newList: IntervalData[] = [];
 
   newList = list.map((item: IntervalData) => {
-    const { start, end, type } = item;
+    const { start, end, type, id } = item;
+    if (id) {
+      return { ...item };
+    }
     return buildIntervalData(start, end, type);
   });
 
@@ -115,7 +98,7 @@ export const pixelsToMinutes = (pixel: number, stepSizeInMinutes: number, stepSi
 };
 
 export const roundTo = (value: number, step: number) => {
-  return Math.floor(value / step) * step;
+  return Math.round(value / step) * step;
 };
 
 

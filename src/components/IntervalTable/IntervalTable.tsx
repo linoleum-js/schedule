@@ -1,44 +1,14 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { IntervalGrid } from './IntervalGrid/IntervalGrid';
+import { IntervalGrid } from '@/components/IntervalGrid/IntervalGrid';
 import { Interval } from '@/components/Interval/Interval';
 import { AppState } from '@/redux/store';
 import { ScheduleData } from '@/models';
 import { fetchScheduleList } from '@/redux/scheduleLists/scheduleListsStore'; 
 
 import styles from './IntervalTable.module.css';
-
-
-const users = [{
-  username: 'Some name 123',
-  id: '1'
-}, {
-  username: 'Some name 123',
-  id: '2'
-}, {
-  username: 'Some name 123',
-  id: '3'
-}, {
-  username: 'Some name 123',
-  id: '4'
-}, {
-  username: 'Some name 123',
-  id: '5'
-}, {
-  username: 'Some name 123',
-  id: '6'
-}, {
-  username: 'Some name 123',
-  id: '7'
-}, {
-  username: 'Some name 123',
-  id: '8'
-}, {
-  username: 'Some name 123',
-  id: '9'
-}, ];
 
 const generateGridLabels = () => {
   return new Array(24).fill(1);
@@ -58,6 +28,7 @@ export const IntervalTable = () => {
     const scheduleIndex = list.findIndex((item) => item.id === schedule.id);
   };
 
+  // TODO create grid
   return (
     <div className={styles.IntervalTableWrapper}>
       <div className={styles.IntervalTableDividerLeft}>

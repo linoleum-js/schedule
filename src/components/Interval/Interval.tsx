@@ -5,8 +5,8 @@ import { useEffect, useState, useRef } from 'react';
 import { IntervalItem } from '../IntervalItem/IntervalItem';
 import { Direction, MovementData, ScheduleData, IntervalData } from '@/models';
 import { AppState, updateSchedule } from '@/redux';
-import { INTERVAL_MIN_WIDTH } from '@/constants';
-import { collapseSameType } from '@/util';
+import { INTERVAL_MIN_WIDTH, STEP_SIZE_IN_MINUTES } from '@/constants';
+import { collapseSameType, roundTo } from '@/util';
 
 import styles from './Interval.module.css';
 
@@ -49,9 +49,14 @@ const getClosestRightIndex = (list: IntervalData[], currentItem: IntervalData) =
 
 // TODO util
 const updateItemById = (list: any[], id: any, data: any) => {
-  const index = list.findIndex((item) => item.id === id);
-  list[index] = { ...list[index], ...data };
-  return list;
+  const newList = [...list]
+  const index = newList.findIndex((item) => item.id === id);
+  newList[index] = { ...newList[index], ...data };
+  return newList;
+};
+
+const roundItems = (list: IntervalData[]) => {
+  return [...list.map((item) => ({ ...item, start: roundTo(item.start, STEP_SIZE_IN_MINUTES), end: roundTo(item.end, STEP_SIZE_IN_MINUTES) }))];
 };
 
 export const Interval = (props: IntervalProps) => {
@@ -89,13 +94,13 @@ export const Interval = (props: IntervalProps) => {
     const currentItemIndex = localList.findIndex((item) => item.id === currentItem.id);
     let newList: IntervalData[] = [];
 
-    newList = [...localList.slice(0, currentItemIndex), currentItem, ...localList.slice(currentItemIndex)];
+    newList = [...localList.slice(0, currentItemIndex), currentItem, ...localList.slice(currentItemIndex + 1)];
 
-    return collapseSameType(newList);
+    return newList;
   };
 
   const onMove = (data: IntervalData) => {
-    const newList = updateItemPosition(data);
+    const newList = getUpdatedData(data);
     setLocalList(newList);
   };;
 
@@ -103,7 +108,9 @@ export const Interval = (props: IntervalProps) => {
     const newList = getUpdatedData(data);
     dispatch(updateSchedule({
       ...item,
-      list: newList
+      // TODO refactor
+      // list: newList
+      list: [...roundItems(newList)]
     }));
   };
 
