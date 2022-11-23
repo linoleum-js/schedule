@@ -1,19 +1,17 @@
 import { throttle } from 'lodash';
-import React, { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 import { updateUiState } from '@/redux';
-import { SCHEDULE_LENGTH, STEP_SIZE_IN_MINUTES } from '@/constants';
+import { STEPS_PER_DAY } from '@/constants';
+import { useAppDispatch } from '@/hooks';
 
 import styles from './IntervalGrid.module.css';
-import { useDispatch } from 'react-redux';
-
-// TODO const
-const stepsPerDay = SCHEDULE_LENGTH / STEP_SIZE_IN_MINUTES;
 
 const generateHourLabels = () => {
-  const hours = 24;
+  // TODO const
+  const hoursPerDay = 24;
   const res = [];
-  for (let i = 0; i < hours; i++) {
+  for (let i = 0; i < hoursPerDay; i++) {
     res.push(`${i.toString().padStart(2, '0')}:00`);
   }
   return res;
@@ -21,9 +19,9 @@ const generateHourLabels = () => {
 
 // TODO fixed height, scroll, fixed dividers
 
-// TODO rename to something about hours (or just a function)
+// TODO rename to something about hours (or just a function?)
 export const IntervalGrid = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const hourLabels = generateHourLabels();
   const gridWrapper = useRef<HTMLDivElement>(null);
 
@@ -32,7 +30,7 @@ export const IntervalGrid = () => {
       return;
     }
     const widthInPixels = gridWrapper.current.clientWidth;
-    const stepSizeInPixels = widthInPixels / stepsPerDay;
+    const stepSizeInPixels = widthInPixels / STEPS_PER_DAY;
     dispatch(updateUiState({ widthInPixels, stepSizeInPixels }));
   };
 

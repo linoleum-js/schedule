@@ -9,16 +9,17 @@ import { ScheduleData } from '@/models';
 import { fetchScheduleList } from '@/redux/scheduleLists/scheduleListsStore'; 
 
 import styles from './IntervalTable.module.css';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 
 const generateGridLabels = () => {
   return new Array(24).fill(1);
 };
 
 export const IntervalTable = () => {
-  const dispatch = useDispatch();
-  const data = useSelector((state: AppState) => state.scheduleLists.present);
+  const dispatch = useAppDispatch();
+  const data = useAppSelector((state: AppState) => state.scheduleLists.present);
   const { list } = data;
-  const uiState = useSelector((state: AppState) => state.uiState);
+  const uiState = useAppSelector((state: AppState) => state.uiState);
 
   useEffect(() => {
     dispatch(fetchScheduleList());
@@ -60,7 +61,7 @@ export const IntervalTable = () => {
                 <div className={styles.IntervalTableName}>{item.userName}</div>
                 <div className={styles.IntervalTableRight}>
                   <Interval
-                    item={item}
+                    data={item}
                     onChange={onChange}
                   />
                 </div>

@@ -1,10 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { Direction, ScheduleData, IntervalData, ActivityType, ActivityTypeEmpty } from '@/models';
-import { SCHEDULE_LENGTH } from '@/constants';
-import { last } from 'lodash';
+import { INTERVAL_MIN_WIDTH, SCHEDULE_LENGTH } from '@/constants';
 
-const buildIntervalData = (start: number, end: number, type: ActivityType, id?: string) => {
+export const buildIntervalData = (start: number, end: number, type: ActivityType, id?: string) => {
   return {
     start, end, type, id: id ?? uuidv4()
   };
@@ -49,7 +48,7 @@ export const fillScheduleWithEmpty = (data: ScheduleData): ScheduleData => {
   };
 };
 
-export const collapseSameType = (
+export const mergeNeighbours = (
   list: IntervalData[], changedItemId?: string
 ): IntervalData[] => {
 
@@ -58,11 +57,12 @@ export const collapseSameType = (
   list.forEach((item: IntervalData) => {
     const { type, end, id } = item;
     if (type === prevType) {
-      const lastItem = last(newList)!;
+      const lastItem = { ...newList.at(-1)! };
       lastItem.end = end;
       if (changedItemId && changedItemId === id) {
         lastItem.id = changedItemId;
       }
+      newList[newList.length - 1] = lastItem;
     } else {
       newList.push(item);
       prevType = type;
@@ -104,3 +104,22 @@ export const roundTo = (value: number, step: number) => {
 
 export const getDirection = (diff: number) => diff > 0 ? Direction.Right : Direction.Left;
 export const getSignedDistance = (diff: number, direction: Direction) => direction === Direction.Right ? diff : -diff;
+
+// export function keepOnScreen(position: any, size: number): any {
+//   const doc = document.documentElement;
+//   const overflowX = position.left + size - doc.clientWidth;
+//   const overflowY = position.top + size - doc.clientHeight;
+//   const result = {...position};
+//   if (overflowX > 0) {
+//     result.left -= overflowX + 5;
+//   }
+//   if (overflowY > 0) {
+//     result.top -= overflowY + 5;
+//   }
+//   return result;
+// }
+
+export const canCreateInside = (data: IntervalData) => {
+  const { start, end } = data;
+  return Math.abs(start - end) >= INTERVAL_MIN_WIDTH * 3;
+};

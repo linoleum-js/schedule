@@ -15,6 +15,7 @@ import store from './redux/store';
 // TODO rename css vars? reorganize them?
 // TODO hide scrollbar
 // TODO global cursor while dragging
+// TODO move all useEffect's to the bottom, read some articles
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // <React.StrictMode>
     <Provider store={store}>

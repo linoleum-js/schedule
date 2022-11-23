@@ -1,3 +1,3 @@
 
 export type ActivityType = string;
-export const ActivityTypeEmpty = 'ActivityTypeEmpty';
+export const ActivityTypeEmpty = 'Empty';

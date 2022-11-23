@@ -3,15 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
 
 import { IntervalItem } from '../IntervalItem/IntervalItem';
-import { Direction, MovementData, ScheduleData, IntervalData } from '@/models';
-import { AppState, updateSchedule } from '@/redux';
+import { Direction, MovementData, ScheduleData, IntervalData, ActivityType, ActivityTypeEmpty } from '@/models';
+import { ActivityTypeData, AppState, updateSchedule } from '@/redux';
 import { INTERVAL_MIN_WIDTH, STEP_SIZE_IN_MINUTES } from '@/constants';
-import { collapseSameType, roundTo } from '@/util';
+import { buildIntervalData, mergeNeighbours, roundTo } from '@/util';
 
 import styles from './Interval.module.css';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 
 type IntervalProps = {
-  item: ScheduleData,
+  data: ScheduleData,
   onChange: (data: ScheduleData) => void;
 };
 
@@ -55,15 +56,28 @@ const updateItemById = (list: any[], id: any, data: any) => {
   return newList;
 };
 
+const getIndexById = (list: IntervalData[], id: string) => {
+  return list.findIndex((item) => item.id === id);
+};
+
 const roundItems = (list: IntervalData[]) => {
-  return [...list.map((item) => ({ ...item, start: roundTo(item.start, STEP_SIZE_IN_MINUTES), end: roundTo(item.end, STEP_SIZE_IN_MINUTES) }))];
+  return [...list.map((item) => ({
+    ...item,
+    start: roundTo(item.start, STEP_SIZE_IN_MINUTES),
+    end: roundTo(item.end, STEP_SIZE_IN_MINUTES)
+  }))];
+};
+
+const getOtherActivityType = (list: ActivityTypeData[], type: ActivityType) => {
+  return list.filter((item) => item.name !== type)[0].name;
 };
 
 export const Interval = (props: IntervalProps) => {
-  const { item } = props;
-  const { list } = item;
+  const { data } = props;
+  const { list } = data;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const activityTypes = useAppSelector((state: AppState) => state.activityTypes.list);
   const [localList, setLocalList] = useState<IntervalData[]>(list);
 
   useEffect(() => {
@@ -71,7 +85,6 @@ export const Interval = (props: IntervalProps) => {
   }, [list]);
 
   const getUpdatedData = (currentItem: IntervalData) => {
-    const currentItemIndex = localList.findIndex((item) => item.id === currentItem.id);
     let newList: IntervalData[] = [];
 
     const closesLeftIndex = getClosestLeftIndex(localList, currentItem);
@@ -79,7 +92,11 @@ export const Interval = (props: IntervalProps) => {
     const closestRightIndex = getClosestRightIndex(localList, currentItem);
     const closestRightItem = localList[closestRightIndex];
 
-    newList = [...localList.slice(0, closesLeftIndex + 1), currentItem, ...localList.slice(closestRightIndex)];
+    newList = [
+      ...localList.slice(0, closesLeftIndex + 1),
+      currentItem,
+      ...localList.slice(closestRightIndex)
+    ];
     if (closesLeftIndex !== -1) {
       newList = updateItemById(newList, closestLeftItem.id, { end: currentItem.start });
     }
@@ -87,31 +104,65 @@ export const Interval = (props: IntervalProps) => {
       newList = updateItemById(newList, closestRightItem.id, { start: currentItem.end });
     }
 
-    return collapseSameType(newList);
+    return mergeNeighbours(newList, currentItem.id);
   };
 
-  const updateItemPosition = (currentItem: IntervalData) => {
-    const currentItemIndex = localList.findIndex((item) => item.id === currentItem.id);
-    let newList: IntervalData[] = [];
-
-    newList = [...localList.slice(0, currentItemIndex), currentItem, ...localList.slice(currentItemIndex + 1)];
-
-    return newList;
-  };
-
-  const onMove = (data: IntervalData) => {
-    const newList = getUpdatedData(data);
+  const onMove = (currentItem: IntervalData) => {
+    const newList = getUpdatedData(currentItem);
     setLocalList(newList);
   };;
 
-  const onMoveEnd = (data: IntervalData) => {
-    const newList = getUpdatedData(data);
+  const onMoveEnd = (currentItem: IntervalData) => {
+    const newList = getUpdatedData(currentItem);
     dispatch(updateSchedule({
-      ...item,
-      // TODO refactor
-      // list: newList
+      ...data,
       list: [...roundItems(newList)]
     }));
+  };
+
+  const handleTypeChange = (id: string, type: ActivityType) => {
+    const index = getIndexById(localList, id);
+    const item = localList[index];
+    const newList = [
+      ...localList.slice(0, index),
+      { ...item, type },
+      ...localList.slice(index + 1)
+    ];
+    dispatch(updateSchedule({ ...data, list: newList }));
+  };
+
+  const handleCreate = (id: string) => {
+    const index = getIndexById(localList, id);
+    const item = localList[index];
+
+    const itemWidth = item.end - item.start;
+    const boundaryLeft = roundTo(item.start + itemWidth / 3, STEP_SIZE_IN_MINUTES);
+    const boundaryRight = roundTo(item.start + itemWidth * 2 / 3, STEP_SIZE_IN_MINUTES);
+
+    const leftItem = buildIntervalData(item.start, boundaryLeft, item.type);
+    const newItemYype = getOtherActivityType(activityTypes, item.type);
+    const newItem = buildIntervalData(boundaryLeft, boundaryRight, newItemYype);
+    const rightItem = buildIntervalData(boundaryRight, item.end, item.type);
+    
+    const newList = [
+      ...localList.slice(0, index),
+      leftItem,
+      newItem,
+      rightItem,
+      ...localList.slice(index + 1)
+    ];
+    dispatch(updateSchedule({ ...data, list: newList }));
+  };
+
+  const handleRemove = (id: string) => {
+    const index = getIndexById(localList, id);
+    const item = localList[index];
+    const newList = mergeNeighbours([
+      ...localList.slice(0, index),
+      { ...item, type: ActivityTypeEmpty },
+      ...localList.slice(index + 1)
+    ]);
+    dispatch(updateSchedule({ ...data, list: newList }));
   };
 
   return (
@@ -121,6 +172,9 @@ export const Interval = (props: IntervalProps) => {
           <IntervalItem
             onMove={onMove}
             onMoveEnd={onMoveEnd}
+            onTypeChange={handleTypeChange}
+            onCreate={handleCreate}
+            onRemove={handleRemove}
             data={item}
             key={item.id}
           />

@@ -7,6 +7,7 @@ import { STEP_SIZE_IN_MINUTES } from '@/constants';
 import { Direction, MovementData } from '@/models';
 import { AppState } from '@/redux/store';
 import { pixelsToMinutes } from '@/util';
+import { useAppSelector } from '@/hooks';
 
 export interface MovableElementProps {
   onMove: (data: MovementData) => void;
@@ -17,7 +18,7 @@ export function movableElement<T extends MovableElementProps> (
   Component: React.JSXElementConstructor<T>
 ) {
   return function MovableElement (props: T) {
-    const uiState = useSelector((state: AppState) => state.uiState);
+    const uiState = useAppSelector((state: AppState) => state.uiState);
     const { stepSizeInPixels } = uiState;
     const { onMove, onMoveEnd } = props;
     const isDragging = useRef(false);
@@ -32,6 +33,11 @@ export function movableElement<T extends MovableElementProps> (
 
     const onDragStart = (event: React.PointerEvent) => {
       const { pageX } = event;
+      // only handle left click
+      // TODO long press for mobile devices?
+      if (event.button !== 0) {
+        return;
+      }
 
       lastX.current = pageX;
       isDragging.current = true;
