@@ -3,9 +3,7 @@ import { findIndex } from 'lodash';
 import undoable from 'redux-undo';
 
 import { ScheduleData } from '@/models';
-import {
-  fillScheduleWithEmpty, generateIds
-} from '../../util/scheduleInputUtil';
+import { addEmptyIntervals, generateIds } from '@/util/scheduleInputUtil';
 
 
 // TODO move to another file
@@ -72,7 +70,7 @@ const schedule1: any = {
 };
 
 const names = [
-  'Cleo Bowes',
+  'Cleo Bowes Cleo Bowes Cleo Bowes',
   'Jagdeep Cairns',
   'Anisa Olsen',
   'Asiyah Wilson',
@@ -170,7 +168,7 @@ export const updateSchedule = (data: ScheduleData) => (dispatch: Function) => {
 export const fetchScheduleList = () => async (dispatch: Function) => {
   dispatch({
     type: ScheduleActionTypes.ReceiveScheduleList,
-    payload: data.map((item: ScheduleData) => fillScheduleWithEmpty(generateIds(item)))
+    payload: data.map((item: ScheduleData) => addEmptyIntervals(generateIds(item)))
   });
 };
 
@@ -220,7 +218,7 @@ const scheduleListsReducerBody: Reducer<ScheduleListState> = (
 
       return {
         isLoading: false,
-        list: [...prevItems, fillScheduleWithEmpty(schedule), ...nextItems]
+        list: [...prevItems, addEmptyIntervals(schedule), ...nextItems]
       };
   }
 

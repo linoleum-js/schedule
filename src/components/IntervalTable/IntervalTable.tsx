@@ -1,15 +1,15 @@
 
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import clsx from 'clsx';
 
 import { IntervalGrid } from '@/components/IntervalGrid/IntervalGrid';
 import { Interval } from '@/components/Interval/Interval';
 import { AppState } from '@/redux/store';
 import { ScheduleData } from '@/models';
-import { fetchScheduleList } from '@/redux/scheduleLists/scheduleListsStore'; 
+import { fetchScheduleList } from '@/redux/scheduleLists/scheduleListsStore';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 
 import styles from './IntervalTable.module.css';
-import { useAppDispatch, useAppSelector } from '@/hooks';
 
 const generateGridLabels = () => {
   return new Array(24).fill(1);
@@ -35,6 +35,9 @@ export const IntervalTable = () => {
       <div className={styles.IntervalTableDividerLeft}>
         <span>27.05</span>
       </div>
+      <div className={styles.IntervalTableDividerRight}>
+        <span>28.05</span>
+      </div>
       <div className={styles.IntervalTable}>
 
         <div className={styles.IntervalChartWrapper}>
@@ -48,7 +51,7 @@ export const IntervalTable = () => {
         </div>
 
         <div className={styles.IntervalTableBody}>
-          <div style={{ display: 'flex', position: 'absolute', width: '100%', height: '100%', paddingLeft: '200px', justifyContent: 'space-between', marginLeft: '1px' }}>
+          <div style={{ display: 'flex', position: 'absolute', width: '100%', height: '100%', paddingLeft: '220px', justifyContent: 'space-between', marginLeft: '1px' }}>
             {generateGridLabels().map((item, index) => {
               return (
                 <div key={index} style={{ borderRight: '1px solid var(--light-grey)', height: '100%', flexGrow: 1 }} />
@@ -58,7 +61,7 @@ export const IntervalTable = () => {
           {list.map((item: ScheduleData) => {
             return (
               <div className={styles.IntervalTableRow} key={item.id}>
-                <div className={styles.IntervalTableName}>{item.userName}</div>
+                <div className={styles.IntervalTableName} title={item.userName}>{item.userName}</div>
                 <div className={styles.IntervalTableRight}>
                   <Interval
                     data={item}
@@ -68,10 +71,8 @@ export const IntervalTable = () => {
               </div>
             );
           })}
+
         </div>
-      </div>
-      <div className={styles.IntervalTableDividerRight}>
-        <span>28.05</span>
       </div>
     </div>
   );

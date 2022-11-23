@@ -1,13 +1,9 @@
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
-import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
-import { scheduleListsReducer, ScheduleListState } from './scheduleLists/scheduleListsStore';
-import { uiStateReducer, UiState } from './uiState/uiStateStore';
-import { activityTypesReducer, ActivityTypesState } from './activityTypes/activityTypesStore';
-
-// 
+import { scheduleListsReducer } from './scheduleLists/scheduleListsStore';
+import { uiStateReducer } from './uiState/uiStateStore';
+import { activityTypesReducer } from './activityTypes/activityTypesStore';
 
 const store = configureStore({
   reducer: {
@@ -15,7 +11,7 @@ const store = configureStore({
     uiState: uiStateReducer,
     activityTypes: activityTypesReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

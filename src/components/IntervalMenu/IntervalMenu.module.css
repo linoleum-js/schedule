@@ -5,10 +5,13 @@
   list-style: none;
   padding: 0;
   text-align: left;
-  z-index: 1;
+  z-index: 250;
   color: #222;
+  /* TODO var */
   box-shadow: 0px 0px 10px 0px rgba(221,221,221,1);
   border-radius: 3px;
+  top: 100%;
+  transition: all 0.1s ease;
 }
 
 .IntervalContextMenu li {
@@ -25,6 +28,8 @@
   border-bottom: none;
 }
 
+
+/* TODO var */
 .IntervalContextMenu li:hover {
   background-color: #f9f9f9;
 }

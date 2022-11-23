@@ -1,7 +1,7 @@
 
 :root {
   --divider-width: 20px;
-  --interval-table-left-width: 200px;
+  --interval-table-left-width: 220px;
   --interval-row-height: 40px;
   --light-grey: #f2f2f2;
   --dark-grey: #a2aeb4;
@@ -10,12 +10,26 @@
 
 .IntervalTable {
   position: relative;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 10px);
   overflow: auto;
+  padding-right: 140px;
+  margin-right: -140px;
+}
+
+.IntervalTable {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: scroll;
+}
+
+.IntervalTable::-webkit-scrollbar {
+  display: none;
 }
 
 .IntervalTableWrapper {
   position: relative;
+  background-color: #fff;
+  box-shadow: 0px 0px 25px 3px rgba(34, 60, 80, 0.33);
 }
 
 .IntervalTableDividerLeft,
@@ -37,6 +51,7 @@
   height: var(--interval-row-height);
   border-bottom: 1px solid var(--light-grey);
   align-items: center;
+  position: relative;
 }
 
 .IntervalChartWrapper,
@@ -50,12 +65,12 @@
 
 .IntervalChartWrapper {
   padding-left: 200px;
-  height: 40px;
+  height: 200px;
   z-index: 300;
 }
 
 .IntervalHeaderWrapper {
-  top: 40px;
+  top: 200px;
 }
 
 .IntervalTableName,
@@ -65,6 +80,11 @@
   flex-shrink: 0;
   line-height: var(--interval-row-height);
   border-right: 1px solid var(--light-grey);
+  text-indent: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-right: 20px;
 }
 
 .IntervalHeaderWrapper {
@@ -89,12 +109,13 @@
 }
 
 .IntervalTableDividerLeft {
-  left: 180px;
+  /* TODO calc */
+  left: 200px;
   box-shadow: 7px 0px 19px 0px rgba(34, 60, 80, 0.38);
 }
 
 .IntervalTableDividerRight {
-  right: 0;
+  right: 1px;
   top: 0;
   box-shadow: -7px 0px 19px 0px rgba(34, 60, 80, 0.38);
   transform: translateX(100%);

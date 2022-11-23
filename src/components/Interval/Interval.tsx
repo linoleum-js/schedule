@@ -1,9 +1,8 @@
 
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 import { IntervalItem } from '../IntervalItem/IntervalItem';
-import { Direction, MovementData, ScheduleData, IntervalData, ActivityType, ActivityTypeEmpty } from '@/models';
+import { ScheduleData, IntervalData, ActivityType, ActivityTypeEmpty } from '@/models';
 import { ActivityTypeData, AppState, updateSchedule } from '@/redux';
 import { INTERVAL_MIN_WIDTH, STEP_SIZE_IN_MINUTES } from '@/constants';
 import { buildIntervalData, mergeNeighbours, roundTo } from '@/util';

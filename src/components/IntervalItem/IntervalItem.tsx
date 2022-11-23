@@ -1,14 +1,13 @@
 
 import { useEffect, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { clamp } from 'lodash';
 
 import IntervalItemBody from '../IntervalItemBody/IntervalItemBody';
 import { IntervalHandle } from '../IntervalHandle/IntervalHandle';
 import { IntervalMenu } from '../IntervalMenu/IntervalMenu';
 
-import { MovementData, IntervalData, ActivityTypeEmpty, Direction, ActivityType } from '@/models';
-import { ActivityTypeData } from '@/redux/activityTypes/activityTypesStore';
+import { MovementData, IntervalData, ActivityTypeEmpty, Direction, ActivityType, Point } from '@/models';
+import { ActivityTypeData } from '@/redux';
 import { AppState } from '@/redux';
 import { INTERVAL_MIN_WIDTH, SCHEDULE_LENGTH, STEP_SIZE_IN_MINUTES } from '@/constants';
 import { minutesToPixels, roundTo, getSignedDistance, canCreateInside } from '@/util';
@@ -35,6 +34,8 @@ export const IntervalItem = (props: IntervalItemProps) => {
   const { stepSizeInPixels } = uiState;
   const [isInFocus, setIsInFocus] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuPositionGlobal, setMenuPositionGlobal] = useState<Point>({ x: 0, y: 0 });
+  const [menuPositionRelative, setMenuPositionRelative] = useState<Point>({ x: 0, y: 0 });
   const domNode = useRef<HTMLDivElement>(null);
 
   const { data } = props;
@@ -43,21 +44,24 @@ export const IntervalItem = (props: IntervalItemProps) => {
   const startRounded = roundTo(start, STEP_SIZE_IN_MINUTES);
   const endRounded = roundTo(end, STEP_SIZE_IN_MINUTES);
 
-  // TODO useMemo, refactor
-  const left = roundTo(minutesToPixels(start, STEP_SIZE_IN_MINUTES, stepSizeInPixels), stepSizeInPixels);
-  const right = roundTo(minutesToPixels(SCHEDULE_LENGTH - end, STEP_SIZE_IN_MINUTES, stepSizeInPixels), stepSizeInPixels);
+  const left = roundTo(
+    minutesToPixels(start, STEP_SIZE_IN_MINUTES, stepSizeInPixels),
+    stepSizeInPixels
+  );
+  const right = roundTo(
+    minutesToPixels(SCHEDULE_LENGTH - end, STEP_SIZE_IN_MINUTES, stepSizeInPixels),
+    stepSizeInPixels
+  );
+  const backgroundColor = getActivityTypeColor(type, activityTypes);
 
-  const css = {
-    left,
-    right,
-    backgroundColor: getActivityTypeColor(type, activityTypes)
-  };
+  const css = { left, right, backgroundColor };
 
   const isEmpty = type === ActivityTypeEmpty;
 
   const handlePointerDown = (event: React.PointerEvent) => {
     if (event.button === 0) {
       setIsInFocus(true);
+      setIsMenuOpen(false);
     }
   };
 
@@ -107,7 +111,12 @@ export const IntervalItem = (props: IntervalItemProps) => {
 
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
-    setIsMenuOpen(true)
+    const { pageX, pageY } = event;
+    const { offsetX, offsetY } = event.nativeEvent;
+    setIsMenuOpen(true);
+    setIsInFocus(false);
+    setMenuPositionGlobal({ x: pageX, y: pageY });
+    setMenuPositionRelative({ x: offsetX, y: offsetY });
   };
 
   const addCloseHandler = (f: Function) => {
@@ -184,6 +193,8 @@ export const IntervalItem = (props: IntervalItemProps) => {
       {isMenuOpen && (
         <IntervalMenu
           items={contextMenuItems}
+          positionGlobal={menuPositionGlobal}
+          positionRelative={menuPositionRelative}
         />
       )}
     </div>

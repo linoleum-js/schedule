@@ -18,7 +18,7 @@ export const mmToHHMM = (timeMinutes: number): string => {
   return `${pad2(hours)}:${pad2(minutes)}`;
 };
 
-export const fillScheduleWithEmpty = (data: ScheduleData): ScheduleData => {
+export const addEmptyIntervals = (data: ScheduleData): ScheduleData => {
   const { list } = data;
   const newList: IntervalData[] = [];
 
@@ -48,10 +48,8 @@ export const fillScheduleWithEmpty = (data: ScheduleData): ScheduleData => {
   };
 };
 
-export const mergeNeighbours = (
-  list: IntervalData[], changedItemId?: string
-): IntervalData[] => {
-
+// TODO refactor?
+export const mergeNeighbours = (list: IntervalData[], changedItemId?: string): IntervalData[] => {
   const newList: IntervalData[] = [];
   let prevType: ActivityType | null = null;
   list.forEach((item: IntervalData) => {
@@ -105,19 +103,19 @@ export const roundTo = (value: number, step: number) => {
 export const getDirection = (diff: number) => diff > 0 ? Direction.Right : Direction.Left;
 export const getSignedDistance = (diff: number, direction: Direction) => direction === Direction.Right ? diff : -diff;
 
-// export function keepOnScreen(position: any, size: number): any {
-//   const doc = document.documentElement;
-//   const overflowX = position.left + size - doc.clientWidth;
-//   const overflowY = position.top + size - doc.clientHeight;
-//   const result = {...position};
-//   if (overflowX > 0) {
-//     result.left -= overflowX + 5;
-//   }
-//   if (overflowY > 0) {
-//     result.top -= overflowY + 5;
-//   }
-//   return result;
-// }
+export function keepOnScreen(position: any, size: number): any {
+  const doc = document.documentElement;
+  const overflowX = position.left + size - doc.clientWidth;
+  const overflowY = position.top + size - doc.clientHeight;
+  const result = {...position};
+  if (overflowX > 0) {
+    result.left -= overflowX + 5;
+  }
+  if (overflowY > 0) {
+    result.top -= overflowY + 5;
+  }
+  return result;
+}
 
 export const canCreateInside = (data: IntervalData) => {
   const { start, end } = data;

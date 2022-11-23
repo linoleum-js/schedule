@@ -13,6 +13,9 @@ const list = [{
   name: 'Sick leave',
   color: '#c371d3'
 }, {
+  name: 'Vacation',
+  color: '#b3b3b3'
+}, {
   name: 'Empty',
   color: 'transparent'
 }];

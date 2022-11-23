@@ -1,6 +1,5 @@
 
 import React, { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useThrottleCallback } from '@react-hook/throttle';
 
 import { STEP_SIZE_IN_MINUTES } from '@/constants';

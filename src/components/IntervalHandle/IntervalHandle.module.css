@@ -5,6 +5,9 @@
   height: 37px;
   background-color: var(--dark-blue);
   bottom: 0;
+  user-select: none;
+  /* TODO prefix */
+  -webkit-user-select: none;
 }
 
 

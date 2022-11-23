@@ -5,6 +5,11 @@
   font-family: 'Roboto', sans-serif;
 }
 
+body {
+  background: #ebeced;
+  overflow: hidden;
+}
+
 .container {
   max-width: 1450px;
   margin: 0 auto;
