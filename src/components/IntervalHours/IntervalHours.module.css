@@ -1,25 +1,25 @@
 
-.IntervalGrid {
+.intervalHours {
   height: 100%;
   width: 100%;
   justify-content: space-between;
   display: flex;
 }
 
-.IntervalGrid > div {
+.intervalHours > div {
   height: 100%;
   width: 100%;
   justify-content: space-between;
   display: flex;
 }
 
-.IntervalGridColumn {
+.intervalHoursColumn {
   height: 100%;
   font-size: 12px;
   flex: 1 1 0px;
 }
 
-.IntervalGridColumn span {
+.intervalHoursColumn span {
   display: block;
   margin-right: -1px;
   max-height: 0;
@@ -27,7 +27,7 @@
   line-height: 40px;
 }
 
-.IntervalGridColumn::after {
+.intervalHoursColumn::after {
   content: '';
   position: absolute;
   background-color: var(--light-grey);

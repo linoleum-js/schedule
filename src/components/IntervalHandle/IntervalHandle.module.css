@@ -1,5 +1,5 @@
 
-.IntervalHandle {
+.intervalHandle {
   position: absolute;
   width: 1px;
   height: 37px;
@@ -11,7 +11,7 @@
 }
 
 
-.IntervalHandleBody {
+.intervalHandleBody {
   position: absolute;
   font-size: 10px;
   background-color: var(--dark-blue);
@@ -25,21 +25,21 @@
   z-index: 250;
 }
 
-.IntervalHandleLeft {
+.intervalHandleLeft {
   left: 0;
 }
 
-.IntervalHandleLeft .IntervalHandleBody {
+.intervalHandleLeft .intervalHandleBody {
   right: 0;
 }
 
 
-.IntervalHandleRight {
+.intervalHandleRight {
   right: 0;
 }
 
-.IntervalHandleLeft .IntervalHandleBody:before,
-.IntervalHandleRight .IntervalHandleBody:after {
+.intervalHandleLeft .intervalHandleBody:before,
+.intervalHandleRight .intervalHandleBody:after {
   content: ' ';
   width: 0;
   height: 0;
@@ -47,13 +47,13 @@
   position: absolute;
 }
 
-.IntervalHandleLeft .IntervalHandleBody:before {
+.intervalHandleLeft .intervalHandleBody:before {
   border-width: 7.5px 5px 7.5px 0;
   border-color: transparent var(--dark-blue) transparent transparent;
   left: -5px;
 }
 
-.IntervalHandleRight .IntervalHandleBody:after {
+.intervalHandleRight .intervalHandleBody:after {
   border-width: 7.5px 0 7.5px 5px;
   border-color: transparent transparent transparent var(--dark-blue);
   right: -5px;

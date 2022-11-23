@@ -5,115 +5,8 @@ import undoable from 'redux-undo';
 import { ScheduleData } from '@/models';
 import { addEmptyIntervals, generateIds } from '@/util/scheduleInputUtil';
 
+import { mockData } from '../../../mock-data/intervals';
 
-// TODO move to another file
-const schedule: any = {
-  id: '123123',
-  userName: '123123',
-  list: [
-    {
-    start: 0,
-    end: 60,
-    type: 'Break',
-    id: '111'
-  },
-  {
-    start: 120,
-    end: 180,
-    type: 'Work',
-    id: '222'
-  }
-  , {
-    start: 240,
-    end: 300,
-    type: 'Work',
-    id: '333'
-  }
-  , {
-    start: 360,
-    end: 720,
-    type: 'Work',
-    id: '444'
-  }
-]
-};
-
-const schedule1: any = {
-  id: '123123',
-  userName: '123123',
-  list: [
-    {
-    start: 0,
-    end: 60,
-    type: 1,
-    id: '111'
-  },
-  {
-    start: 250,
-    end: 380,
-    type: 2,
-    id: '222'
-  }
-  , {
-    start: 720,
-    end: 780,
-    type: 2,
-    id: '333'
-  }
-  , {
-    start: 1020,
-    end: 1080,
-    type: 2,
-    id: '444'
-  }
-]
-};
-
-const names = [
-  'Cleo Bowes Cleo Bowes Cleo Bowes',
-  'Jagdeep Cairns',
-  'Anisa Olsen',
-  'Asiyah Wilson',
-  'Kelsi Stevenson',
-  'Benas Stott',
-  'Caleb Hubbard',
-  'Nikola Stone',
-  'Shauna Mckenzie',
-  'Shakira Hess',
-  'Ed Cohen',
-  'Denny Cochran',
-  'Irfan Mueller',
-  'Krista Rodriguez',
-  'Fannie Dalton',
-  'Alix Gould',
-  'Kajetan Robbins',
-  'Cheyenne Watts',
-  'Eshaal Nash',
-  'Jena Bowman',
-  'Seb Irwin',
-  'Luella Simpson',
-  'Madeeha Friedman',
-  'Bree Whitworth',
-  'Horace Burch',
-  'Wilfred Beech',
-  'India Jenkins',
-  'Mared Morales',
-  'Izabel Hobbs',
-  'Lincoln Richard',
-];
-
-const generateUsers = () => {
-  const res = [];
-
-  for (let name of names) {
-    res.push({ ...schedule, userName: name, id: name })
-  }
-
-  return res;
-};
-
-
-const data: ScheduleData[] = generateUsers();
 
 export interface ScheduleListState {
   isLoading: boolean;
@@ -168,7 +61,7 @@ export const updateSchedule = (data: ScheduleData) => (dispatch: Function) => {
 export const fetchScheduleList = () => async (dispatch: Function) => {
   dispatch({
     type: ScheduleActionTypes.ReceiveScheduleList,
-    payload: data.map((item: ScheduleData) => addEmptyIntervals(generateIds(item)))
+    payload: mockData.map((item: ScheduleData) => addEmptyIntervals(generateIds(item)))
   });
 };
 

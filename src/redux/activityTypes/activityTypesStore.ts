@@ -1,24 +1,6 @@
 import { Reducer, Action } from 'redux';
 
-const list = [{
-  name: 'Work',
-  color: '#48bd54'
-}, {
-  name: 'Break',
-  color: '#ffbc48'
-}, {
-  name: 'Training',
-  color: '#5266b9'
-}, {
-  name: 'Sick leave',
-  color: '#c371d3'
-}, {
-  name: 'Vacation',
-  color: '#b3b3b3'
-}, {
-  name: 'Empty',
-  color: 'transparent'
-}];
+import { mockData } from '../../../mock-data/activityTypes';
 
 export interface ActivityTypeData {
   name: string;
@@ -40,8 +22,7 @@ export interface ActivityTypAction {
   payload: ActivityTypesState;
 }
 
-// TODO replace any
-export const recieveActivityTypes: any = (payload: ActivityTypesState) => (dispatch: Function) => {
+export const recieveActivityTypes = (payload: ActivityTypesState) => (dispatch: Function) => {
   // TODO request 
   dispatch({
     type: ActivityTypesActionTypes.ReceiveActivityType,
@@ -51,7 +32,7 @@ export const recieveActivityTypes: any = (payload: ActivityTypesState) => (dispa
 
 const initialState: ActivityTypesState = {
   isLoading: false,
-  list
+  list: mockData
 };
 
 export const activityTypesReducer: Reducer<ActivityTypesState> = (

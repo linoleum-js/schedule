@@ -13,16 +13,16 @@ interface IntervalHandleProps {
 
 const IntervalHandleComponent = (props: IntervalHandleProps) => {
   const classes = clsx(
-    styles.IntervalHandle,
+    styles.intervalHandle,
     {
-      [styles.IntervalHandleLeft]: props.direction === Direction.Left,
-      [styles.IntervalHandleRight]: props.direction === Direction.Right
+      [styles.intervalHandleLeft]: props.direction === Direction.Left,
+      [styles.intervalHandleRight]: props.direction === Direction.Right
     }
   );
 
   return (
     <div className={classes}>
-      <div className={styles.IntervalHandleBody}>
+      <div className={styles.intervalHandleBody}>
         {mmToHHMM(props.value)}
       </div>
     </div>

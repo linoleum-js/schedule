@@ -67,7 +67,7 @@ export const IntervalMenu = (props: IntervalMenuProps) => {
 
   return (
     <ul
-      className={styles.IntervalContextMenu}
+      className={styles.intervalContextMenu}
       onPointerDown={handleClick}
       ref={domNode}
       style={getPositionStyle()}
@@ -82,7 +82,7 @@ export const IntervalMenu = (props: IntervalMenuProps) => {
             {name}
             {attrs && (
               <span
-                className={styles.IntervalContextMenuColor}
+                className={styles.intervalContextMenuColor}
                 style={{ backgroundColor: attrs.color }}
               />
             )}

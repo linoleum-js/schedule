@@ -1,9 +1,9 @@
 
 import { useEffect } from 'react';
-import clsx from 'clsx';
 
-import { IntervalGrid } from '@/components/IntervalGrid/IntervalGrid';
+import { IntervalHours } from '@/components/IntervalHours/IntervalHours';
 import { Interval } from '@/components/Interval/Interval';
+import { IntervalTableGrid } from '@/components/IntervalTableGrid/IntervalTableGrid';
 import { AppState } from '@/redux/store';
 import { ScheduleData } from '@/models';
 import { fetchScheduleList } from '@/redux/scheduleLists/scheduleListsStore';
@@ -11,9 +11,6 @@ import { useAppDispatch, useAppSelector } from '@/hooks';
 
 import styles from './IntervalTable.module.css';
 
-const generateGridLabels = () => {
-  return new Array(24).fill(1);
-};
 
 export const IntervalTable = () => {
   const dispatch = useAppDispatch();
@@ -31,38 +28,32 @@ export const IntervalTable = () => {
 
   // TODO create grid
   return (
-    <div className={styles.IntervalTableWrapper}>
-      <div className={styles.IntervalTableDividerLeft}>
+    <div className={styles.intervalTableWrapper}>
+      <div className={styles.intervalTableDividerLeft}>
         <span>27.05</span>
       </div>
-      <div className={styles.IntervalTableDividerRight}>
+      <div className={styles.intervalTableDividerRight}>
         <span>28.05</span>
       </div>
-      <div className={styles.IntervalTable}>
+      <div className={styles.intervalTable}>
 
-        <div className={styles.IntervalChartWrapper}>
+        <div className={styles.intervalChartWrapper}>
           chart
         </div>
-        <div className={styles.IntervalHeaderWrapper}>
-          <div className={styles.IntervalTableNameHeader}>
+        <div className={styles.intervalHeaderWrapper}>
+          <div className={styles.intervalTableNameHeader}>
             Full name
           </div>
-          <IntervalGrid />
+          <IntervalHours />
         </div>
 
-        <div className={styles.IntervalTableBody}>
-          <div style={{ display: 'flex', position: 'absolute', width: '100%', height: '100%', paddingLeft: '220px', justifyContent: 'space-between', marginLeft: '1px' }}>
-            {generateGridLabels().map((item, index) => {
-              return (
-                <div key={index} style={{ borderRight: '1px solid var(--light-grey)', height: '100%', flexGrow: 1 }} />
-              );
-            })}
-          </div>
+        <div className={styles.intervalTableBody}>
+          <IntervalTableGrid />
           {list.map((item: ScheduleData) => {
             return (
-              <div className={styles.IntervalTableRow} key={item.id}>
-                <div className={styles.IntervalTableName} title={item.userName}>{item.userName}</div>
-                <div className={styles.IntervalTableRight}>
+              <div className={styles.intervalTableRow} key={item.id}>
+                <div className={styles.intervalTableName} title={item.userName}>{item.userName}</div>
+                <div className={styles.intervalTableRight}>
                   <Interval
                     data={item}
                     onChange={onChange}

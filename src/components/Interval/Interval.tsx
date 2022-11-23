@@ -165,7 +165,7 @@ export const Interval = (props: IntervalProps) => {
   };
 
   return (
-    <div className={styles.Interval}>
+    <div className={styles.interval}>
       {localList.map((item) => {
         return (
           <IntervalItem

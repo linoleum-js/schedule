@@ -6,7 +6,7 @@ import styles from './IntervalItemBody.module.css';
 
 const IntervalItemBody = () => {
   return (
-    <div className={`${styles.IntervalItemBody}`} />
+    <div className={`${styles.intervalItemBody}`} />
   );
 };
 

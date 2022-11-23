@@ -14,8 +14,7 @@ export interface UpdateUiStateAction {
   payload: UiState;
 }
 
-// TODO replace any
-export const updateUiState: any = (payload: UiState) => (dispatch: Function) => {
+export const updateUiState = (payload: UiState) => (dispatch: Function) => {
   dispatch({
     type: UiStateActionTypes.UpdateUiState,
     payload

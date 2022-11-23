@@ -162,7 +162,7 @@ export const IntervalItem = (props: IntervalItemProps) => {
 
   return (
     <div
-      className={styles.IntervalItem}
+      className={styles.intervalItem}
       style={css}
       onPointerDown={handlePointerDown}
       onContextMenu={handleContextMenu}

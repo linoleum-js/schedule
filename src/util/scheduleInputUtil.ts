@@ -103,20 +103,6 @@ export const roundTo = (value: number, step: number) => {
 export const getDirection = (diff: number) => diff > 0 ? Direction.Right : Direction.Left;
 export const getSignedDistance = (diff: number, direction: Direction) => direction === Direction.Right ? diff : -diff;
 
-export function keepOnScreen(position: any, size: number): any {
-  const doc = document.documentElement;
-  const overflowX = position.left + size - doc.clientWidth;
-  const overflowY = position.top + size - doc.clientHeight;
-  const result = {...position};
-  if (overflowX > 0) {
-    result.left -= overflowX + 5;
-  }
-  if (overflowY > 0) {
-    result.top -= overflowY + 5;
-  }
-  return result;
-}
-
 export const canCreateInside = (data: IntervalData) => {
   const { start, end } = data;
   return Math.abs(start - end) >= INTERVAL_MIN_WIDTH * 3;

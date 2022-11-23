@@ -5,7 +5,7 @@ import { updateUiState } from '@/redux';
 import { STEPS_PER_DAY } from '@/constants';
 import { useAppDispatch } from '@/hooks';
 
-import styles from './IntervalGrid.module.css';
+import styles from './IntervalHours.module.css';
 
 const generateHourLabels = () => {
   // TODO const
@@ -17,15 +17,12 @@ const generateHourLabels = () => {
   return res;
 };
 
-// TODO fixed height, scroll, fixed dividers
-
-// TODO rename to something about hours (or just a function?)
-export const IntervalGrid = () => {
+export const IntervalHours = () => {
   const dispatch = useAppDispatch();
   const hourLabels = generateHourLabels();
   const gridWrapper = useRef<HTMLDivElement>(null);
 
-  const calcGridDimensions = () => {
+  const calcHoursDimensions = () => {
     if (!gridWrapper.current) {
       return;
     }
@@ -37,12 +34,12 @@ export const IntervalGrid = () => {
 
   // TODO throttle?
   const resizeHandler = useMemo(
-    () => throttle(calcGridDimensions, 150),
+    () => throttle(calcHoursDimensions, 150),
     []
   );
   
   useEffect(() => {
-    calcGridDimensions();
+    calcHoursDimensions();
   }, []);
 
   useEffect(() => {
@@ -53,11 +50,11 @@ export const IntervalGrid = () => {
   }, []);
 
   return (
-    <div className={styles.IntervalGrid}>
+    <div className={styles.intervalHours}>
       <div ref={gridWrapper}>
         {hourLabels.map((item) => {
           return (
-            <div key={item} className={styles.IntervalGridColumn}>
+            <div key={item} className={styles.intervalHoursColumn}>
               <span>{item}</span>
             </div>
           );
