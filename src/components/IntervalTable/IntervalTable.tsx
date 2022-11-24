@@ -6,7 +6,7 @@ import { Interval } from '@/components/Interval/Interval';
 import { IntervalTableGrid } from '@/components/IntervalTableGrid/IntervalTableGrid';
 import { AppState } from '@/redux/store';
 import { ScheduleData } from '@/models';
-import { fetchScheduleList } from '@/redux/scheduleLists/scheduleListsStore';
+import { fetchScheduleAction } from '@/redux/scheduleLists/scheduleListsStore';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
 import styles from './IntervalTable.module.css';
@@ -19,7 +19,7 @@ export const IntervalTable = () => {
   const uiState = useAppSelector((state: AppState) => state.uiState);
 
   useEffect(() => {
-    dispatch(fetchScheduleList());
+    dispatch(fetchScheduleAction());
   }, []);
 
   const onChange = (schedule: ScheduleData) => {

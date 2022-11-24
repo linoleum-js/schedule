@@ -1,126 +1,90 @@
-import { Reducer, Action } from 'redux';
-import { findIndex } from 'lodash';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import undoable from 'redux-undo';
+import { call, put, takeLatest, CallEffect, PutEffect } from 'redux-saga/effects';
 
 import { ScheduleData } from '@/models';
+import Api from '@/api/api';
 import { addEmptyIntervals, generateIds } from '@/util/scheduleInputUtil';
-
-import { mockData } from '../../../mock-data/intervals';
-
 
 export interface ScheduleListState {
   isLoading: boolean;
   list: ScheduleData[];
+  error: string | null;
 }
 
 export enum ScheduleActionTypes {
-  RequestScheduleList = 'REQUEST_SCHEDULE_LIST',
-  ReceiveScheduleList = 'RECEIVE_SCHEDULE_LIST',
-  UpdateScheduleList = 'UPDATE_SCHEDULE_LIST',
-  UndoUpdateScheduleList = 'UNDO_UPDATE_SCHEDULE_LIST',
-  RedoUpdateScheduleList = 'REDO_UPDATE_SCHEDULE_LIST',
+  fetchScheduleAction = 'fetchScheduleAction',
+  fetchScheduleSuccess = 'fetchScheduleSuccess',
+  fetchScheduleFailure = 'fetchScheduleFailure',
+  updateSchedule = 'updateSchedule',
+  scheduleUndo = 'scheduleUndo',
+  scheduleRedo = 'scheduleRedo',
   UndoRedoInit = '@@redux-undo/INIT',
 }
 
-export interface UndoRedoInit {
-  type: ScheduleActionTypes.UndoRedoInit
-}
-
-export interface ScheduleActionPayload {
-  list: ScheduleData[];
-  schedule: ScheduleData;
-}
-
-export interface RequestScheduleListAction {
-  type: ScheduleActionTypes.RequestScheduleList;
-}
-
-export interface ReceiveScheduleListAction {
-  type: ScheduleActionTypes.ReceiveScheduleList;
-  payload: ScheduleData[];
-}
-
-export interface UpdateScheduleAction {
-  type: ScheduleActionTypes.UpdateScheduleList;
-  payload: ScheduleData;
-}
-
-export type ScheduleAction =
-  RequestScheduleListAction |
-  ReceiveScheduleListAction |
-  UpdateScheduleAction |
-  UndoRedoInit;
-
-export const updateSchedule = (data: ScheduleData) => (dispatch: Function) => {
-  dispatch({
-    type: ScheduleActionTypes.UpdateScheduleList,
-    payload: data
-  });
-};
-
-export const fetchScheduleList = () => async (dispatch: Function) => {
-  dispatch({
-    type: ScheduleActionTypes.ReceiveScheduleList,
-    payload: mockData.map((item: ScheduleData) => addEmptyIntervals(generateIds(item)))
-  });
-};
-
-export const undoUpdateSchedule = () => {
-  return {
-    type: ScheduleActionTypes.UndoUpdateScheduleList
-  };
-};
-
-export const redoUpdateSchedule = () => {
-  return {
-    type: ScheduleActionTypes.RedoUpdateScheduleList
-  };
-};
-
 const initialState: ScheduleListState = {
   list: [],
-  isLoading: false
+  isLoading: false,
+  error: null
 };
 
-const scheduleListsReducerBody: Reducer<ScheduleListState> = (
-  state: ScheduleListState = initialState,
-  action: Action
-): ScheduleListState => {
-  const { type } = action as ScheduleAction;
+const slice = createSlice({
+  name: 'schedule',
+  initialState,
+  reducers: {
+    [ScheduleActionTypes.fetchScheduleAction]: (state) => {
+      state.error = null;
+      state.isLoading = true;
+    },
+    [ScheduleActionTypes.fetchScheduleSuccess]: (state, action: PayloadAction<ScheduleData[]>) => {
+      const { payload } = action;
+      state.isLoading = false;
+      state.error = null;
+      state.list = payload;
+    },
+    [ScheduleActionTypes.fetchScheduleFailure]: (state, action: PayloadAction<string>) => {
+      const { payload } = action;
+      state.isLoading = false;
+      state.error = payload;
+    },
 
-  switch (type) {
-    case ScheduleActionTypes.RequestScheduleList:
-      return {
-        isLoading: true,
-        list: []
-      };
-
-    case ScheduleActionTypes.ReceiveScheduleList:  
-      const { payload: scheduleList } = action as ReceiveScheduleListAction;
-      return {
-        isLoading: false,
-        list: scheduleList
-      };
-
-    case ScheduleActionTypes.UpdateScheduleList:
-      const { payload: schedule } = action as UpdateScheduleAction;
+    [ScheduleActionTypes.updateSchedule]: (state, action: PayloadAction<ScheduleData>) => {
+      const { payload: schedule } = action;
       const { list } = state;
-      const index: number = findIndex(list, { id: schedule.id });
+      const index: number = list.findIndex((item) => item.id === schedule.id);
       const prevItems: ScheduleData[] = list.slice(0, index);
       const nextItems: ScheduleData[] = list.slice(index + 1);
+      const newList = [...prevItems, addEmptyIntervals(schedule), ...nextItems];
 
-      return {
-        isLoading: false,
-        list: [...prevItems, addEmptyIntervals(schedule), ...nextItems]
-      };
+      state.list = newList;
+    }
   }
+});
 
-  return state;
-};
+export const { updateSchedule, fetchScheduleSuccess, fetchScheduleFailure, fetchScheduleAction } = slice.actions;
 
-export const scheduleListsReducer = undoable(scheduleListsReducerBody, {
-  undoType: ScheduleActionTypes.UndoUpdateScheduleList,
-  redoType: ScheduleActionTypes.RedoUpdateScheduleList,
+
+// TODO create ScheduleAction
+type FetchScheduleReturnType = Generator<CallEffect<ScheduleData[]> | PutEffect <any>, void, ScheduleData[]>;
+function* fetchSchedule(): FetchScheduleReturnType {
+  try {
+    let list = yield call(Api.getSchedule);
+    list = list.map((item: ScheduleData) => addEmptyIntervals(generateIds(item)));
+    console.log('before yield put');
+    yield put(fetchScheduleSuccess(list));
+  } catch (error: any) {
+    yield put(fetchScheduleFailure(error.message));
+  }
+}
+
+export function* watchFetchSchedule() {
+  yield takeLatest(fetchScheduleAction, fetchSchedule);
+}
+
+export const scheduleListsReducer = undoable(slice.reducer, {
+  undoType: ScheduleActionTypes.scheduleUndo,
+  redoType: ScheduleActionTypes.scheduleRedo,
   initTypes: ['@@redux-undo/INIT'],
   ignoreInitialState: true
 })

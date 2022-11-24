@@ -76,4 +76,4 @@ const generateUsers = () => {
 };
 
 
-export const mockData: ScheduleData[] = generateUsers();
+export const scheduleData: ScheduleData[] = generateUsers();

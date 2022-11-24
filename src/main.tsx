@@ -17,6 +17,8 @@ import store from '@/redux/store';
 // TODO move all useEffect's to the bottom, read some articles
 // TODO class names
 // TODO add split
+// TODO redux toolkit
+// TODO remove lodash?
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // <React.StrictMode>
     <Provider store={store}>

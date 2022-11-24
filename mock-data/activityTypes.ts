@@ -1,5 +1,5 @@
 
-export const mockData = [{
+export const activitiesData = [{
   name: 'Work',
   color: '#48bd54'
 }, {

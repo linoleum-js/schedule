@@ -1,6 +1,8 @@
 import { Reducer, Action } from 'redux';
 
-import { mockData } from '../../../mock-data/activityTypes';
+import Api from '@/api/api';
+
+import { activitiesData } from '../../../mock-data/activityTypes';
 
 export interface ActivityTypeData {
   name: string;
@@ -32,7 +34,7 @@ export const recieveActivityTypes = (payload: ActivityTypesState) => (dispatch: 
 
 const initialState: ActivityTypesState = {
   isLoading: false,
-  list: mockData
+  list: activitiesData
 };
 
 export const activityTypesReducer: Reducer<ActivityTypesState> = (
