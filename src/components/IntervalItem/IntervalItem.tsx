@@ -6,8 +6,9 @@ import IntervalItemBody from '../IntervalItemBody/IntervalItemBody';
 import { IntervalHandle } from '../IntervalHandle/IntervalHandle';
 import { IntervalMenu } from '../IntervalMenu/IntervalMenu';
 
-import { MovementData, IntervalData, ActivityTypeEmpty, Direction, ActivityType, Point } from '@/models';
-import { ActivityTypeData } from '@/redux';
+import {
+  MovementData, IntervalData, ActivityTypeEmpty, Direction, ActivityType, Point, ActivityTypeData
+} from '@/models';
 import { AppState } from '@/redux';
 import { INTERVAL_MIN_WIDTH, SCHEDULE_LENGTH, STEP_SIZE_IN_MINUTES } from '@/constants';
 import { minutesToPixels, roundTo, getSignedDistance, canCreateInside } from '@/util';

@@ -4,3 +4,4 @@ export * from './ScheduleIntervalData';
 export * from './ScheduleData';
 export * from './ActivityType';
 export * from './Point';
+export * from './ActivityTypeData';

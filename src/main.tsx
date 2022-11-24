@@ -19,6 +19,8 @@ import store from '@/redux/store';
 // TODO add split
 // TODO redux toolkit
 // TODO remove lodash?
+// TODO min width, hours size?
+// TODO add tutorial, list of what is possible
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // <React.StrictMode>
     <Provider store={store}>

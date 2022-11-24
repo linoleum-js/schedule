@@ -1,5 +1,7 @@
-import { throttle } from 'lodash';
-import { useEffect, useRef, useMemo } from 'react';
+
+import { useEffect, useRef } from 'react';
+
+import { useThrottleCallback } from '@react-hook/throttle';
 
 import { updateUiState } from '@/redux';
 import { STEPS_PER_DAY } from '@/constants';
@@ -31,12 +33,7 @@ export const IntervalHours = () => {
     dispatch(updateUiState({ widthInPixels, stepSizeInPixels }));
   };
 
-
-  // TODO throttle?
-  const resizeHandler = useMemo(
-    () => throttle(calcHoursDimensions, 150),
-    []
-  );
+  const resizeHandler = useThrottleCallback(calcHoursDimensions, 150);
   
   useEffect(() => {
     calcHoursDimensions();

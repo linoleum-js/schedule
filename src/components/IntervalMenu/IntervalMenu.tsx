@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { CSSProperties } from 'styled-components';
 
 import { Point } from '@/models';
@@ -37,7 +37,7 @@ export const IntervalMenu = (props: IntervalMenuProps) => {
     setOpenSubmenuName(name);
   };
 
-  const getPositionStyle = (): CSSProperties => {
+  const calcPosition = (): CSSProperties => {
     const css: CSSProperties = {};
     let left = positionRelative.x - menuSize / 2;
     const right = positionGlobal.x + menuSize / 2;
@@ -70,7 +70,7 @@ export const IntervalMenu = (props: IntervalMenuProps) => {
       className={styles.intervalContextMenu}
       onPointerDown={handleClick}
       ref={domNode}
-      style={getPositionStyle()}
+      style={calcPosition()}
     >
       {currentItems.map((item: IntervalMenuItem) => {
         const { name, attrs } = item;

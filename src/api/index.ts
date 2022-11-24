@@ -1,7 +1,7 @@
 
 import { scheduleData } from '../../mock-data/intervals';
 import { activitiesData } from '../../mock-data/activityTypes';
-import { ScheduleData } from '@/models';
+import { ScheduleData, ActivityTypeData } from '@/models';
 
 const Api = {
   getSchedule: (): Promise<ScheduleData[]> => {
@@ -12,7 +12,7 @@ const Api = {
     });
   },
 
-  getActivities: () => {
+  getActivities: (): Promise<ActivityTypeData[]> => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(activitiesData);

@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 
 import { IntervalItem } from '../IntervalItem/IntervalItem';
-import { ScheduleData, IntervalData, ActivityType, ActivityTypeEmpty } from '@/models';
-import { ActivityTypeData, AppState, updateSchedule } from '@/redux';
+import { ScheduleData, IntervalData, ActivityType, ActivityTypeEmpty, ActivityTypeData } from '@/models';
+import { AppState, updateSchedule } from '@/redux';
 import { INTERVAL_MIN_WIDTH, STEP_SIZE_IN_MINUTES } from '@/constants';
 import { buildIntervalData, mergeNeighbours, roundTo } from '@/util';
 
@@ -129,6 +129,10 @@ export const Interval = (props: IntervalProps) => {
     dispatch(updateSchedule({ ...data, list: newList }));
   };
 
+  /**
+   * Split the interval in 3 parts, insert the new interval in the middle
+   * @param id 
+   */
   const handleCreate = (id: string) => {
     const index = getIndexById(localList, id);
     const item = localList[index];

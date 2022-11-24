@@ -6,7 +6,7 @@ import { Interval } from '@/components/Interval/Interval';
 import { IntervalTableGrid } from '@/components/IntervalTableGrid/IntervalTableGrid';
 import { AppState } from '@/redux/store';
 import { ScheduleData } from '@/models';
-import { fetchScheduleAction, undoUpdateSchedule, redoUpdateSchedule } from '@/redux/scheduleLists/scheduleListsStore';
+import { fetchScheduleAction, undoUpdateSchedule, redoUpdateSchedule, fetchActivitiesAction } from '@/redux';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
 import styles from './IntervalTable.module.css';
@@ -19,6 +19,7 @@ export const IntervalTable = () => {
 
   useEffect(() => {
     dispatch(fetchScheduleAction());
+    dispatch(fetchActivitiesAction());
   }, []);
 
   const undoRedoHandler = (event: KeyboardEvent) => {

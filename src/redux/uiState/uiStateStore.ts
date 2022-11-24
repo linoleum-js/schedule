@@ -1,24 +1,8 @@
-import { Reducer, Action } from 'redux';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface UiState {
   widthInPixels: number;
   stepSizeInPixels: number;
-}
-
-export enum UiStateActionTypes {
-  UpdateUiState = 'UPDATE_UI_STATE'
-}
-
-export interface UpdateUiStateAction {
-  type: UiStateActionTypes.UpdateUiState;
-  payload: UiState;
-}
-
-export const updateUiState = (payload: UiState) => (dispatch: Function) => {
-  dispatch({
-    type: UiStateActionTypes.UpdateUiState,
-    payload
-  });
 }
 
 const initialState: UiState = {
@@ -26,16 +10,18 @@ const initialState: UiState = {
   stepSizeInPixels: 1
 };
 
-export const uiStateReducer: Reducer<UiState> = (
-  state: UiState = initialState,
-  action: Action
-): UiState => {
-  const { type, payload } = action as UpdateUiStateAction;
-
-  switch (type) {
-    case UiStateActionTypes.UpdateUiState:
-      return payload;
+const slice = createSlice({
+  name: 'ui',
+  initialState,
+  reducers: {
+    updateUiState: (state, action: PayloadAction<UiState>) => {
+      const { payload } = action;
+      state.stepSizeInPixels = payload.stepSizeInPixels ?? state.stepSizeInPixels;
+      state.widthInPixels = payload.widthInPixels ?? state.widthInPixels;
+    }
   }
+});
 
-  return state;
-};
+export const { updateUiState } = slice.actions;
+
+export const uiStateReducer = slice.reducer;

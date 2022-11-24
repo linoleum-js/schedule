@@ -4,7 +4,7 @@ import undoable from 'redux-undo';
 import { call, put, takeLatest, CallEffect, PutEffect } from 'redux-saga/effects';
 
 import { ScheduleData } from '@/models';
-import Api from '@/api/api';
+import Api from '@/api';
 import { addEmptyIntervals, generateIds } from '@/util/scheduleInputUtil';
 
 export interface ScheduleListState {
@@ -13,14 +13,9 @@ export interface ScheduleListState {
   error: string | null;
 }
 
-export enum ScheduleActionTypes {
-  fetchScheduleAction = 'fetchScheduleAction',
-  fetchScheduleSuccess = 'fetchScheduleSuccess',
-  fetchScheduleFailure = 'fetchScheduleFailure',
-  updateSchedule = 'updateSchedule',
+enum ScheduleActionTypes {
   scheduleUndo = 'scheduleUndo',
   scheduleRedo = 'scheduleRedo',
-  UndoRedoInit = '@@redux-undo/INIT',
 }
 
 const initialState: ScheduleListState = {
@@ -33,42 +28,47 @@ const slice = createSlice({
   name: 'schedule',
   initialState,
   reducers: {
-    [ScheduleActionTypes.fetchScheduleAction]: (state) => {
+    fetchScheduleAction: (state) => {
       state.error = null;
       state.isLoading = true;
     },
-    [ScheduleActionTypes.fetchScheduleSuccess]: (state, action: PayloadAction<ScheduleData[]>) => {
+    fetchScheduleSuccess: (state, action: PayloadAction<ScheduleData[]>) => {
       const { payload } = action;
       state.isLoading = false;
       state.error = null;
       state.list = payload;
     },
-    [ScheduleActionTypes.fetchScheduleFailure]: (state, action: PayloadAction<string>) => {
+    fetchScheduleFailure: (state, action: PayloadAction<string>) => {
       const { payload } = action;
       state.isLoading = false;
       state.error = payload;
     },
-
-    [ScheduleActionTypes.updateSchedule]: (state, action: PayloadAction<ScheduleData>) => {
+    updateSchedule: (state, action: PayloadAction<ScheduleData>) => {
       const { payload: schedule } = action;
       const { list } = state;
       const index: number = list.findIndex((item) => item.id === schedule.id);
       const prevItems: ScheduleData[] = list.slice(0, index);
       const nextItems: ScheduleData[] = list.slice(index + 1);
       const newList = [...prevItems, addEmptyIntervals(schedule), ...nextItems];
-
       state.list = newList;
     }
   }
 });
 
-export const { updateSchedule, fetchScheduleSuccess, fetchScheduleFailure, fetchScheduleAction } = slice.actions;
+export const {
+  updateSchedule, fetchScheduleSuccess, fetchScheduleFailure, fetchScheduleAction
+} = slice.actions;
 export const undoUpdateSchedule = createAction(ScheduleActionTypes.scheduleUndo);
 export const redoUpdateSchedule = createAction(ScheduleActionTypes.scheduleRedo);
 
 
-// TODO create ScheduleAction
-type FetchScheduleReturnType = Generator<CallEffect<ScheduleData[]> | PutEffect <any>, void, ScheduleData[]>;
+// TODO create ScheduleAction, remove any
+type FetchScheduleReturnType = Generator<
+  CallEffect<ScheduleData[]> | PutEffect <any>,
+  void,
+  ScheduleData[]
+>;
+
 function* fetchSchedule(): FetchScheduleReturnType {
   try {
     let list = yield call(Api.getSchedule);
@@ -86,6 +86,5 @@ export function* watchFetchSchedule() {
 export const scheduleListsReducer = undoable(slice.reducer, {
   undoType: ScheduleActionTypes.scheduleUndo,
   redoType: ScheduleActionTypes.scheduleRedo,
-  // initTypes: ['@@redux-undo/INIT'],
   ignoreInitialState: true
 })
