@@ -7,6 +7,6 @@ import { watchFetchActivities } from './activityTypes/activityTypesStore';
 export default function* rootSaga() {
   yield all([
     watchFetchSchedule(),
-    watchFetchActivities()
+    watchFetchActivities(),
   ]);
 }

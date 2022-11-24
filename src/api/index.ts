@@ -3,6 +3,7 @@ import { scheduleData } from '../../mock-data/intervals';
 import { activitiesData } from '../../mock-data/activityTypes';
 import { ScheduleData, ActivityTypeData } from '@/models';
 
+// mock api
 const Api = {
   getSchedule: (): Promise<ScheduleData[]> => {
     return new Promise((resolve) => {

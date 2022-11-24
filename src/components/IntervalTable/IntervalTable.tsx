@@ -42,7 +42,6 @@ export const IntervalTable = () => {
     };
   });
 
-  // TODO create grid
   return (
     <div className={styles.intervalTableWrapper}>
       <div className={styles.intervalTableDividerLeft}>

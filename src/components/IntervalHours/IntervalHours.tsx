@@ -10,7 +10,6 @@ import { useAppDispatch } from '@/hooks';
 import styles from './IntervalHours.module.css';
 
 const generateHourLabels = () => {
-  // TODO const
   const hoursPerDay = 24;
   const res = [];
   for (let i = 0; i < hoursPerDay; i++) {
