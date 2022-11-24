@@ -1,4 +1,4 @@
-import { IntervalData } from "./ScheduleIntervalData";
+import { IntervalData } from './ScheduleIntervalData';
 
 export interface ScheduleData {
   id: string;

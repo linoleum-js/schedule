@@ -1,7 +1,8 @@
 import clsx from 'clsx';
+import moment from 'moment';
 
 import { Direction } from '@/models';
-import { mmToHHMM } from '@/util';
+import { formatTime } from '@/util';
 import { movableElement, MovableElementProps } from '../MovableElement/MovableElement';
 
 import styles from './IntervalHandle.module.css';
@@ -23,7 +24,7 @@ const IntervalHandleComponent = (props: IntervalHandleProps) => {
   return (
     <div className={classes}>
       <div className={styles.intervalHandleBody}>
-        {mmToHHMM(props.value)}
+        {formatTime(props.value)}
       </div>
     </div>
   );

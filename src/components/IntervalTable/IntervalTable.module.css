@@ -32,12 +32,6 @@
   box-shadow: 0px 0px 25px 3px rgba(34, 60, 80, 0.33);
 }
 
-.intervalTableDividerLeft,
-.intervalTableDividerRight {
-  width: var(--divider-width);
-  position: absolute;
-}
-
 .intervalTableHeader {
   display: flex;
 }
@@ -95,36 +89,5 @@
 .intervalTableRight {
   position: relative;
   flex-grow: 1;
-  /* padding: 0 35px; */
 }
 
-.intervalTableDividerLeft,
-.intervalTableDividerRight {
-  height: 100%;
-  border-left: 1px solid var(--dark-grey);
-  border-right: 1px solid var(--dark-grey);
-  background-color: #fff;
-  z-index: 100;
-  cursor: pointer;
-}
-
-.intervalTableDividerLeft {
-  /* TODO calc */
-  left: 200px;
-  box-shadow: 7px 0px 19px 0px rgba(34, 60, 80, 0.38);
-}
-
-.intervalTableDividerRight {
-  right: 1px;
-  top: 0;
-  box-shadow: -7px 0px 19px 0px rgba(34, 60, 80, 0.38);
-  transform: translateX(100%);
-}
-
-.intervalTableDividerLeft span,
-.intervalTableDividerRight span {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%) rotate(-90deg);
-}

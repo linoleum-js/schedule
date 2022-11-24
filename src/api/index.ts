@@ -5,7 +5,7 @@ import { ScheduleData, ActivityTypeData } from '@/models';
 
 // mock api
 const Api = {
-  getSchedule: (): Promise<ScheduleData[]> => {
+  getSchedule: (date: string): Promise<ScheduleData[]> => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(scheduleData);

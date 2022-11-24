@@ -9,15 +9,6 @@ export const buildIntervalData = (start: number, end: number, type: ActivityType
   };
 };
 
-export const pad2 = (value: string): string =>  value.padStart(2, '0');
-
-export const mmToHHMM = (timeMinutes: number): string => {
-  // TODO toString? move to pad?
-  const hours: string = String(Math.floor(timeMinutes / 60));
-  const minutes: string = String(Math.floor(timeMinutes % 60));
-  return `${pad2(hours)}:${pad2(minutes)}`;
-};
-
 export const addEmptyIntervals = (data: ScheduleData): ScheduleData => {
   const { list } = data;
   const newList: IntervalData[] = [];

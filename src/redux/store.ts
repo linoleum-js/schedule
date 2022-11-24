@@ -15,7 +15,7 @@ const store = configureStore({
     uiState: uiStateReducer,
     activityTypes: activityTypesReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger, sagaMiddleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

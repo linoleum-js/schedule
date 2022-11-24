@@ -1,11 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom';
+
 import App from './App'
 import './index.css'
 
 import store from '@/redux/store';
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+  },
+]);
 
 // TODO uncomment StrictMode
 // TODO add .editorconfig
@@ -17,11 +28,11 @@ import store from '@/redux/store';
 // TODO remove lodash?
 // TODO min container width, hours size?
 // TODO add tutorial, list of what is possible
-// TODO add new lines
+// TODO i18n?
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  // <React.StrictMode>
+  <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <RouterProvider router={router} />
     </Provider>
-  // </React.StrictMode>
+  </React.StrictMode>
 );

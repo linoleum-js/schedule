@@ -5,7 +5,7 @@ import { call, put, takeLatest, CallEffect, PutEffect } from 'redux-saga/effects
 
 import { ScheduleData } from '@/models';
 import Api from '@/api';
-import { addEmptyIntervals, generateIds } from '@/util/scheduleInputUtil';
+import { addEmptyIntervals, generateIds } from '@/util/interval';
 
 export interface ScheduleListState {
   isLoading: boolean;
@@ -28,7 +28,7 @@ const slice = createSlice({
   name: 'schedule',
   initialState,
   reducers: {
-    fetchScheduleAction: (state) => {
+    fetchScheduleAction: (state, action: PayloadAction<string>) => {
       state.error = null;
       state.isLoading = true;
     },
@@ -69,9 +69,9 @@ type FetchScheduleReturnType = Generator<
   ScheduleData[]
 >;
 
-function* fetchSchedule(): FetchScheduleReturnType {
+function* fetchSchedule(action: PayloadAction<string>): FetchScheduleReturnType {
   try {
-    let list = yield call(Api.getSchedule);
+    let list = yield call(Api.getSchedule, action.payload);
     list = list.map((item: ScheduleData) => addEmptyIntervals(generateIds(item)));
     yield put(fetchScheduleSuccess(list));
   } catch (error: any) {

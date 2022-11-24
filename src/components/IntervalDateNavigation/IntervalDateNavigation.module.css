@@ -1,0 +1,44 @@
+
+:root {
+  --divider-width: 20px;
+  --interval-table-left-width: 220px;
+  --interval-row-height: 40px;
+  --light-grey: #f2f2f2;
+  --dark-grey: #a2aeb4;
+  --dark-blue: #2f4050;
+}
+
+.intervalTableDividerLeft,
+.intervalTableDividerRight {
+  width: var(--divider-width);
+  position: absolute;
+  height: 100%;
+  border-left: 1px solid var(--dark-grey);
+  border-right: 1px solid var(--dark-grey);
+  background-color: #fff;
+  z-index: 100;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.intervalTableDividerLeft {
+  /* TODO calc */
+  left: 200px;
+  box-shadow: 7px 0px 19px 0px rgba(34, 60, 80, 0.38);
+}
+
+.intervalTableDividerRight {
+  right: 1px;
+  top: 0;
+  box-shadow: -7px 0px 19px 0px rgba(34, 60, 80, 0.38);
+  transform: translateX(100%);
+}
+
+.intervalTableDividerLeft span,
+.intervalTableDividerRight span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%) rotate(-90deg);
+}
