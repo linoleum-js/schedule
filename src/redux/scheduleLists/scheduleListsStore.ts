@@ -87,4 +87,4 @@ export const scheduleListsReducer = undoable(slice.reducer, {
   undoType: ScheduleActionTypes.scheduleUndo,
   redoType: ScheduleActionTypes.scheduleRedo,
   ignoreInitialState: true
-})
+});
