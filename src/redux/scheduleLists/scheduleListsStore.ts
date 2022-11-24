@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import undoable from 'redux-undo';
 import { call, put, takeLatest, CallEffect, PutEffect } from 'redux-saga/effects';
@@ -63,6 +63,8 @@ const slice = createSlice({
 });
 
 export const { updateSchedule, fetchScheduleSuccess, fetchScheduleFailure, fetchScheduleAction } = slice.actions;
+export const undoUpdateSchedule = createAction(ScheduleActionTypes.scheduleUndo);
+export const redoUpdateSchedule = createAction(ScheduleActionTypes.scheduleRedo);
 
 
 // TODO create ScheduleAction
@@ -71,7 +73,6 @@ function* fetchSchedule(): FetchScheduleReturnType {
   try {
     let list = yield call(Api.getSchedule);
     list = list.map((item: ScheduleData) => addEmptyIntervals(generateIds(item)));
-    console.log('before yield put');
     yield put(fetchScheduleSuccess(list));
   } catch (error: any) {
     yield put(fetchScheduleFailure(error.message));
@@ -85,6 +86,6 @@ export function* watchFetchSchedule() {
 export const scheduleListsReducer = undoable(slice.reducer, {
   undoType: ScheduleActionTypes.scheduleUndo,
   redoType: ScheduleActionTypes.scheduleRedo,
-  initTypes: ['@@redux-undo/INIT'],
+  // initTypes: ['@@redux-undo/INIT'],
   ignoreInitialState: true
 })

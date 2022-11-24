@@ -6,7 +6,7 @@ import { Interval } from '@/components/Interval/Interval';
 import { IntervalTableGrid } from '@/components/IntervalTableGrid/IntervalTableGrid';
 import { AppState } from '@/redux/store';
 import { ScheduleData } from '@/models';
-import { fetchScheduleAction } from '@/redux/scheduleLists/scheduleListsStore';
+import { fetchScheduleAction, undoUpdateSchedule, redoUpdateSchedule } from '@/redux/scheduleLists/scheduleListsStore';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
 import styles from './IntervalTable.module.css';
@@ -16,15 +16,30 @@ export const IntervalTable = () => {
   const dispatch = useAppDispatch();
   const data = useAppSelector((state: AppState) => state.scheduleLists.present);
   const { list } = data;
-  const uiState = useAppSelector((state: AppState) => state.uiState);
 
   useEffect(() => {
     dispatch(fetchScheduleAction());
   }, []);
 
-  const onChange = (schedule: ScheduleData) => {
-    const scheduleIndex = list.findIndex((item) => item.id === schedule.id);
+  const undoRedoHandler = (event: KeyboardEvent) => {
+    const { key, ctrlKey, metaKey, shiftKey } = event;
+    if (key.toLowerCase() === 'z') {
+      if (ctrlKey || metaKey) {
+        if (shiftKey) {
+          dispatch(redoUpdateSchedule());
+        } else {
+          dispatch(undoUpdateSchedule());
+        }
+      }
+    }
   };
+
+  useEffect(() => {
+    document.addEventListener('keydown', undoRedoHandler, false);
+    return () => {
+      document.removeEventListener('keydown', undoRedoHandler, false);
+    };
+  });
 
   // TODO create grid
   return (
@@ -54,10 +69,7 @@ export const IntervalTable = () => {
               <div className={styles.intervalTableRow} key={item.id}>
                 <div className={styles.intervalTableName} title={item.userName}>{item.userName}</div>
                 <div className={styles.intervalTableRight}>
-                  <Interval
-                    data={item}
-                    onChange={onChange}
-                  />
+                  <Interval data={item} />
                 </div>
               </div>
             );

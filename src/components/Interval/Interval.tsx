@@ -12,7 +12,6 @@ import { useAppDispatch, useAppSelector } from '@/hooks';
 
 type IntervalProps = {
   data: ScheduleData,
-  onChange: (data: ScheduleData) => void;
 };
 
 /**

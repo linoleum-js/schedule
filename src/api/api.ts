@@ -8,7 +8,7 @@ const Api = {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(scheduleData);
-      }, 1000);
+      }, 1);
     });
   },
 
@@ -16,7 +16,7 @@ const Api = {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(activitiesData);
-      }, 1000);
+      }, 1);
     });
   }
 };
