@@ -1,14 +1,13 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, AnyAction } from '@reduxjs/toolkit';
 import { takeLatest, call, put, CallEffect, PutEffect } from 'redux-saga/effects';
 import { ActivityTypeData } from '@/models';
 
 import Api from '@/api';
 
-
 export interface ActivityTypesState {
-  error: string | null,
-  isLoading: boolean,
-  list: ActivityTypeData[]
+  error: string | null;
+  isLoading: boolean;
+  list: ActivityTypeData[];
 }
 
 const initialState: ActivityTypesState = {
@@ -40,9 +39,8 @@ const slice = createSlice({
 
 export const { fetchActivitiesAction, fetchActivitiesFailure, fetchActivitiesSuccess } = slice.actions;
 
-// TODO create ScheduleAction, replace any
 type FetchActivitiesReturnType = Generator<
-  CallEffect<ActivityTypeData[]> | PutEffect <any>,
+  CallEffect<ActivityTypeData[]> | PutEffect <AnyAction>,
   void,
   ActivityTypeData[]
 >;

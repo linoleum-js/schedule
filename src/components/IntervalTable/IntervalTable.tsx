@@ -7,9 +7,12 @@ import { IntervalHours } from '@/components/IntervalHours/IntervalHours';
 import { Interval } from '@/components/Interval/Interval';
 import { IntervalTableGrid } from '@/components/IntervalTableGrid/IntervalTableGrid';
 import { IntervalDateNavigation } from '@/components/IntervalDateNavigation/IntervalDateNavigation';
+import { IntervalTableChart } from '@/components/IntervalTableChart/IntervalTableChart';
 import { AppState } from '@/redux/store';
 import { ScheduleData } from '@/models';
-import { fetchScheduleAction, undoUpdateSchedule, redoUpdateSchedule, fetchActivitiesAction } from '@/redux';
+import {
+  fetchScheduleAction, undoUpdateSchedule, redoUpdateSchedule, fetchActivitiesAction, fetchCallLoadAction
+} from '@/redux';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { formatDateDisplay, formatDate, parseDate } from '@/util';
 
@@ -25,7 +28,11 @@ export const IntervalTable = () => {
   const date = parseDate(dateString);
 
   useEffect(() => {
-    dispatch(fetchScheduleAction(formatDate(date)));
+    dispatch(fetchScheduleAction(dateString));
+    dispatch(fetchCallLoadAction(dateString));
+  }, [dateString]);
+
+  useEffect(() => {
     dispatch(fetchActivitiesAction());
   }, []);
 
@@ -42,6 +49,7 @@ export const IntervalTable = () => {
     }
   };
 
+  // TODO dependencies?
   useEffect(() => {
     document.addEventListener('keydown', undoRedoHandler, false);
     return () => {
@@ -53,10 +61,7 @@ export const IntervalTable = () => {
     <div className={styles.intervalTableWrapper}>
       <IntervalDateNavigation />
       <div className={styles.intervalTable}>
-
-        <div className={styles.intervalChartWrapper}>
-          chart
-        </div>
+        <IntervalTableChart />
         <div className={styles.intervalHeaderWrapper}>
           <div className={styles.intervalTableNameHeader}>
             Full name
@@ -69,14 +74,15 @@ export const IntervalTable = () => {
           {list.map((item: ScheduleData) => {
             return (
               <div className={styles.intervalTableRow} key={item.id}>
-                <div className={styles.intervalTableName} title={item.userName}>{item.userName}</div>
+                <div className={styles.intervalTableName} title={item.userName}>
+                  {item.userName}
+                </div>
                 <div className={styles.intervalTableRight}>
                   <Interval data={item} />
                 </div>
               </div>
             );
           })}
-
         </div>
       </div>
     </div>

@@ -48,19 +48,12 @@
   position: relative;
 }
 
-.intervalChartWrapper,
 .intervalHeaderWrapper {
   display: flex;
   position: sticky;
   top: 0;
   background-color: #fff;
   z-index: 1;
-}
-
-.intervalChartWrapper {
-  padding-left: 200px;
-  height: 200px;
-  z-index: 300;
 }
 
 .intervalHeaderWrapper {

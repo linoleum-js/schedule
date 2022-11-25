@@ -28,11 +28,12 @@ const router = createBrowserRouter([
 // TODO remove lodash?
 // TODO min container width, hours size?
 // TODO add tutorial, list of what is possible
-// TODO i18n?
+// TODO add tests?
+// TODO preloader
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

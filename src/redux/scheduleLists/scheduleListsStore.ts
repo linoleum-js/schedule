@@ -1,5 +1,4 @@
-import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { AnyAction, createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import undoable from 'redux-undo';
 import { call, put, takeLatest, CallEffect, PutEffect } from 'redux-saga/effects';
 
@@ -62,9 +61,8 @@ export const undoUpdateSchedule = createAction(ScheduleActionTypes.scheduleUndo)
 export const redoUpdateSchedule = createAction(ScheduleActionTypes.scheduleRedo);
 
 
-// TODO create ScheduleAction, remove any
 type FetchScheduleReturnType = Generator<
-  CallEffect<ScheduleData[]> | PutEffect <any>,
+  CallEffect<ScheduleData[]> | PutEffect <AnyAction>,
   void,
   ScheduleData[]
 >;

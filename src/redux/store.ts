@@ -5,6 +5,7 @@ import logger from 'redux-logger';
 import { scheduleListsReducer } from './scheduleLists/scheduleListsStore';
 import { uiStateReducer } from './uiState/uiStateStore';
 import { activityTypesReducer } from './activityTypes/activityTypesStore';
+import { callLoadReducer } from './callLoad/callLoadStore';
 import rootSaga from './rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -14,7 +15,9 @@ const store = configureStore({
     scheduleLists: scheduleListsReducer,
     uiState: uiStateReducer,
     activityTypes: activityTypesReducer,
+    callLoad: callLoadReducer,
   },
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware, logger),
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
   devTools: process.env.NODE_ENV !== 'production',
 });

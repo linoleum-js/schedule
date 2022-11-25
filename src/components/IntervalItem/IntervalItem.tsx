@@ -168,6 +168,7 @@ export const IntervalItem = (props: IntervalItemProps) => {
       onPointerDown={handlePointerDown}
       onContextMenu={handleContextMenu}
       ref={domNode}
+      title={type}
     >
       {!isEmpty && isInFocus && (
         <IntervalHandle

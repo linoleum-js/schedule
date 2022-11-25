@@ -1,0 +1,22 @@
+
+.intervalChartWrapper {
+  display: flex;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+  padding-left: 220px;
+  height: 200px;
+  z-index: 300;
+}
+
+.intervalChartGridWrapper {
+  position: relative;
+  width: 100%;
+  margin-right: -100%;
+}
+
+.intervalChartGridWrapper > div {
+  padding-left: 0;
+}
+
