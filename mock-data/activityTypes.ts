@@ -1,7 +1,8 @@
 
 export const activitiesData = [{
   name: 'Work',
-  color: '#48bd54'
+  color: '#48bd54',
+  isWorking: true
 }, {
   name: 'Break',
   color: '#ffbc48'

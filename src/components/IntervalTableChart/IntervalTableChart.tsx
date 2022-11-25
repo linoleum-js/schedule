@@ -1,5 +1,5 @@
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, ComposedChart, Bar, Cell } from 'recharts';
+import { Line, ResponsiveContainer, Area, ComposedChart, Bar, Cell } from 'recharts';
 
 import { IntervalTableGrid } from '../IntervalTableGrid/IntervalTableGrid';
 
