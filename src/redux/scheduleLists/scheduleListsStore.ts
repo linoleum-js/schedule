@@ -60,11 +60,10 @@ export const {
 export const undoUpdateSchedule = createAction(ScheduleActionTypes.scheduleUndo);
 export const redoUpdateSchedule = createAction(ScheduleActionTypes.scheduleRedo);
 
-
 type FetchScheduleReturnType = Generator<
-  CallEffect<ScheduleData[]> | PutEffect <AnyAction>,
-  void,
-  ScheduleData[]
+CallEffect<ScheduleData[]> | PutEffect <AnyAction>,
+void,
+ScheduleData[]
 >;
 
 function* fetchSchedule(action: PayloadAction<string>): FetchScheduleReturnType {

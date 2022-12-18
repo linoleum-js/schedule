@@ -14,7 +14,7 @@ export interface MovableElementProps {
 }
 
 export function movableElement<T extends MovableElementProps> (
-  Component: React.JSXElementConstructor<T>
+  WrappedComponent: any
 ) {
   return function MovableElement (props: T) {
     const uiState = useAppSelector((state: AppState) => state.uiState);
@@ -22,7 +22,7 @@ export function movableElement<T extends MovableElementProps> (
     const { onMove, onMoveEnd } = props;
     const isDragging = useRef(false);
     const lastX = useRef(0);
-    
+
     const onDragEnd = () => {
       if (isDragging.current) {
         onMoveEnd();
@@ -32,8 +32,6 @@ export function movableElement<T extends MovableElementProps> (
 
     const onDragStart = (event: React.PointerEvent) => {
       const { pageX } = event;
-      // only handle left click
-      // TODO long press for mobile devices?
       if (event.button !== 0) {
         return;
       }
@@ -72,10 +70,9 @@ export function movableElement<T extends MovableElementProps> (
       };
     });
 
-    
     return (
       <div onPointerDown={onDragStart}>
-        <Component {...props} />
+        <WrappedComponent {...props} />
       </div>
     );
   };

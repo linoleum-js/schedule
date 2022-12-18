@@ -24,7 +24,7 @@ const menuSize = 150;
 
 export const IntervalMenu = (props: IntervalMenuProps) => {
   const { items, positionGlobal, positionRelative } = props;
-  const [openSubmenuName, setOpenSubmenuName] = useState<string|null>(null);
+  const [openSubmenuName, setOpenSubmenuName] = useState<string | null>(null);
   const domNode = useRef<HTMLUListElement>(null);
 
   const onItemClick = (item: IntervalMenuItem) => {
@@ -39,14 +39,15 @@ export const IntervalMenu = (props: IntervalMenuProps) => {
 
   const calcPosition = (): CSSProperties => {
     const css: CSSProperties = {};
-    let left = positionRelative.x - menuSize / 2;
+    let left = positionRelative.x;
     const right = positionGlobal.x + menuSize / 2;
-    const availableVSpace = document.documentElement.clientWidth - right - 20;
+    const dividerRight = document.getElementById('js-interval-divider-right');
+    const availableVSpace = dividerRight!.getBoundingClientRect().x - right - menuSize / 2 - 20;
     if (availableVSpace < 0) {
       left += availableVSpace;
     }
     css.left = left;
-    
+
     const bottom = positionGlobal.y + menuSize + 20;
     const availableHSpace = document.documentElement.clientHeight - bottom;
     if (availableHSpace < 0) {

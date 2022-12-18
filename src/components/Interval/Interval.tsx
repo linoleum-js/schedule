@@ -10,8 +10,8 @@ import { buildIntervalData, mergeNeighbours, roundTo } from '@/util';
 import styles from './Interval.module.css';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
-type IntervalProps = {
-  data: ScheduleData,
+interface IntervalProps {
+  data: ScheduleData;
 };
 
 /**
@@ -46,7 +46,6 @@ const getClosestRightIndex = (list: IntervalData[], currentItem: IntervalData) =
   return closesRightIndex;
 };
 
-// TODO util
 const updateItemById = (list: any[], id: any, data: any) => {
   const newList = [...list]
   const index = newList.findIndex((item) => item.id === id);
@@ -108,7 +107,7 @@ export const Interval = (props: IntervalProps) => {
   const onMove = (currentItem: IntervalData) => {
     const newList = getUpdatedData(currentItem);
     setLocalList(newList);
-  };;
+  };
 
   const onMoveEnd = (currentItem: IntervalData) => {
     const newList = getUpdatedData(currentItem);
@@ -131,7 +130,7 @@ export const Interval = (props: IntervalProps) => {
 
   /**
    * Split the interval in 3 parts, insert the new interval in the middle
-   * @param id 
+   * @param id
    */
   const handleCreate = (id: string) => {
     const index = getIndexById(localList, id);
@@ -145,7 +144,7 @@ export const Interval = (props: IntervalProps) => {
     const newItemYype = getOtherActivityType(activityTypes, item.type);
     const newItem = buildIntervalData(boundaryLeft, boundaryRight, newItemYype);
     const rightItem = buildIntervalData(boundaryRight, item.end, item.type);
-    
+
     const newList = [
       ...localList.slice(0, index),
       leftItem,

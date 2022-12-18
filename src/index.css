@@ -9,10 +9,5 @@ body {
   background: #ebeced;
   overflow: hidden;
   font-size: 14px;
-  padding: 20px 40px 20px 20px;
-}
-
-.container {
-  max-width: 1750px;
-  margin: 0 auto;
+  padding: 20px 20px 20px 20px;
 }

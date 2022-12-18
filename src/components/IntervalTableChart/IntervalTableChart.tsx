@@ -37,7 +37,6 @@ const CustomDot = (props: any) => {
   );
 };
 
-// TODO optimize performance
 export const IntervalTableChart = () => {
   const data = useAppSelector((state: AppState) => state.scheduleLists.present);
   const activities = useAppSelector((state: AppState) => state.activityTypes.list);
@@ -51,13 +50,14 @@ export const IntervalTableChart = () => {
     return activities.find(({ name }) => name === type)?.isWorking;
   };
 
-  // TODO refactor
   const calcCapacityTimeline = () => {
     const result = [];
     for (let time = 0; time < SCHEDULE_LENGTH; time += STEP_SIZE_IN_MINUTES) {
-      // TODO refactor
-      let capacity = list.reduce((acc, item) => {
-        if (item.list.some(({ start, end, type }) => start <= time && time <= end && isWorkingType(type))) {
+      const capacity = list.reduce((acc, item) => {
+        const isWorking = item.list.some(({ start, end, type }) => (
+          start <= time && time <= end && isWorkingType(type))
+        );
+        if (isWorking) {
           return acc + 1;
         }
         return acc;
@@ -72,8 +72,6 @@ export const IntervalTableChart = () => {
   const graphData = capacityTimeline.map((item, index) => {
     return { ...item, load: callLoad[index]?.value };
   });
-
-  // gradient through gradientOffset 
 
   return (
     <div className={styles.intervalChartWrapper}>

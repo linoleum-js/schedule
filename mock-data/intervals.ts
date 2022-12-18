@@ -1,7 +1,7 @@
 import { SCHEDULE_LENGTH } from '@/constants';
-import { v4 as uuidv4, v4 } from 'uuid';
+import { v4 } from 'uuid';
 
-import { ScheduleData } from '../src/models';
+import { IntervalData, ScheduleData } from '../src/models';
 
 const names = [
   'Cleo Bowes Cleo Bowes Cleo Bowes',
@@ -78,32 +78,30 @@ const names = [
 
 export const actualNames = [...names.slice(0, 40)];
 
-const templateInterval = [{
-  start: 0, end: 60 * 1.5, type: 'Work'
+const templateInterval: IntervalData[] = [{
+  start: 0, end: 60 * 1.5, type: 'Work', id: v4()
 }, {
-  start: 60 * 1.5, end: 60 * 1.75, type: 'Break'
+  start: 60 * 1.5, end: 60 * 1.75, type: 'Break', id: v4()
 }, {
-  start: 60 * 1.75, end: 60 * 3.5, type: 'Work'
+  start: 60 * 1.75, end: 60 * 3.5, type: 'Work', id: v4()
 }, {
-  start: 60 * 3, end: 60 * 4, type: 'Break'
+  start: 60 * 3, end: 60 * 4, type: 'Break', id: v4()
 }, {
-  start: 60 * 4, end: 60 * 6, type: 'Work'
+  start: 60 * 4, end: 60 * 6, type: 'Work', id: v4()
 }, {
-  start: 60 * 6, end: 60 * 6.25, type: 'Break'
+  start: 60 * 6, end: 60 * 6.25, type: 'Break', id: v4()
 }, {
-  start: 60 * 6.25, end: 60 * 7.25, type: 'Training'
+  start: 60 * 6.25, end: 60 * 7.25, type: 'Training', id: v4()
 }, {
-  start: 60 * 7.25, end: 60 * 9, type: 'Work'
+  start: 60 * 7.25, end: 60 * 9, type: 'Work', id: v4()
 }];
 
-const addIntervalIds = (list: any) => list.map((item: any) => ({ ...item, id: v4() }));
-
-const getTemplateInterval = () => addIntervalIds(templateInterval);
+const getTemplateInterval = () => templateInterval;
 
 const getRandomOffset = (list: any) => {
   const max = 15 * 60;
-  const offset = Math.floor(Math.random() * max);
-  return list.map((item: any) => {
+  const offset: number = Math.floor(Math.random() * max);
+  return list.map((item: IntervalData) => {
     return { ...item, start: item.start + offset, end: item.end + offset };
   });
 };
@@ -114,12 +112,12 @@ const inject = (list: any, type: string) => {
   for (let i = 0; i < number; i++) {
     indexes.push(Math.floor(Math.random() * list.length));
   }
-  
+
   return list.map((item: any, index: number) => {
     if (indexes.includes(index)) {
       return {
         ...item,
-        list: [{ start: 0, end: SCHEDULE_LENGTH, type }]
+        list: [{ start: 0, end: SCHEDULE_LENGTH - 1, type }]
       };
     }
     return item;
@@ -129,8 +127,8 @@ const inject = (list: any, type: string) => {
 export const generateUsers = () => {
   const res: ScheduleData[] = [];
 
-  for (let name of actualNames) {
-    res.push({ list: getRandomOffset(getTemplateInterval()) , userName: name, id: v4() });
+  for (const name of actualNames) {
+    res.push({ list: getRandomOffset(getTemplateInterval()), userName: name, id: v4() });
   }
 
   return inject(inject(res, 'Sick leave'), 'Vacation');

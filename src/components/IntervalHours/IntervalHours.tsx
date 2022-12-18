@@ -33,7 +33,7 @@ export const IntervalHours = () => {
   };
 
   const resizeHandler = useThrottleCallback(calcHoursDimensions, 150);
-  
+
   useEffect(() => {
     calcHoursDimensions();
   }, []);

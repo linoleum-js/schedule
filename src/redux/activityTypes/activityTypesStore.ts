@@ -28,7 +28,6 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.list = action.payload;
-      console.log
     },
     fetchActivitiesFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
@@ -40,14 +39,14 @@ const slice = createSlice({
 export const { fetchActivitiesAction, fetchActivitiesFailure, fetchActivitiesSuccess } = slice.actions;
 
 type FetchActivitiesReturnType = Generator<
-  CallEffect<ActivityTypeData[]> | PutEffect <AnyAction>,
-  void,
-  ActivityTypeData[]
+CallEffect<ActivityTypeData[]> | PutEffect <AnyAction>,
+void,
+ActivityTypeData[]
 >;
 
 function* fetchActivities(): FetchActivitiesReturnType {
   try {
-    let list = yield call(Api.getActivities);
+    const list = yield call(Api.getActivities);
     yield put(fetchActivitiesSuccess(list));
   } catch (error: any) {
     yield put(fetchActivitiesFailure(error.message));

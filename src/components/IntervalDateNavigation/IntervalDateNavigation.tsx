@@ -7,7 +7,7 @@ import { formatDateDisplay, parseDate, formatDate } from '@/util';
 import styles from './IntervalDateNavigation.module.css';
 
 export const IntervalDateNavigation = () => {
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const dateString = searchParams.get('date') ?? formatDateDisplay(moment(Date.now()));
   const date = parseDate(dateString);
@@ -27,7 +27,7 @@ export const IntervalDateNavigation = () => {
       <div className={styles.intervalTableDividerLeft} onClick={onPrevClick}>
         <span>{formatDateDisplay(prevDay)}</span>
       </div>
-      <div className={styles.intervalTableDividerRight} onClick={onNextClick}>
+      <div className={styles.intervalTableDividerRight} onClick={onNextClick} id="js-interval-divider-right">
         <span>{formatDateDisplay(nextDay)}</span>
       </div>
     </>

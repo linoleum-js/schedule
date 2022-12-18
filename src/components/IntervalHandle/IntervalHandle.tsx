@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import moment from 'moment';
 
 import { Direction } from '@/models';
 import { formatTime } from '@/util';

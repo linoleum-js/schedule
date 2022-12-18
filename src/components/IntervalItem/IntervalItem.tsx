@@ -20,7 +20,7 @@ interface IntervalItemProps {
   onMove: (data: IntervalData) => void;
   onMoveEnd: (data: IntervalData) => void;
   onTypeChange: (id: string, type: ActivityType) => void;
-  onRemove: (id: string) =>  void;
+  onRemove: (id: string) => void;
   onCreate: (id: string) => void;
   data: IntervalData;
 }
@@ -72,7 +72,7 @@ export const IntervalItem = (props: IntervalItemProps) => {
       setIsMenuOpen(false);
     }
   };
-  
+
   const clampStart = (diff: number) => clamp(start + diff, 0, end - INTERVAL_MIN_WIDTH);
   const clampEnd = (diff: number) => clamp(end + diff, start + INTERVAL_MIN_WIDTH, SCHEDULE_LENGTH);
 
@@ -126,7 +126,6 @@ export const IntervalItem = (props: IntervalItemProps) => {
     setIsInFocus(false);
   };
 
-  // TODO: move to the menu?
   let contextMenuItems: any[] = [{
     name: 'Change type',
     submenu: activityTypes.map((activity: ActivityTypeData) => {

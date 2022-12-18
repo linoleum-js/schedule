@@ -14,9 +14,14 @@
 }
 
 .intervalHoursColumn {
-  height: 100%;
+  height: 40px;
   font-size: 12px;
   flex: 1 1 0px;
+}
+
+.intervalHoursColumn:last-child {
+  border-right: 1px solid var(--light-grey);
+  margin-right: -1px;
 }
 
 .intervalHoursColumn span {

@@ -6,7 +6,6 @@
   background-color: var(--dark-blue);
   bottom: 0;
   user-select: none;
-  /* TODO prefix */
   -webkit-user-select: none;
 }
 
@@ -22,7 +21,6 @@
   cursor: grab;
   color: #fff;
   padding: 0 5px;
-  z-index: 250;
 }
 
 .intervalHandleLeft {
@@ -32,7 +30,6 @@
 .intervalHandleLeft .intervalHandleBody {
   right: 0;
 }
-
 
 .intervalHandleRight {
   right: 0;

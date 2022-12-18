@@ -7,24 +7,24 @@ import { CallLoadData } from '@/redux/callLoad/callLoadStore';
 
 // mock api
 const Api = {
-  getSchedule: (date: string): Promise<ScheduleData[]> => {
-    return new Promise((resolve) => {
+  getSchedule: async (date: string): Promise<ScheduleData[]> => {
+    return await new Promise((resolve) => {
       setTimeout(() => {
         resolve(generateUsers());
       }, 1);
     });
   },
 
-  getActivities: (): Promise<ActivityTypeData[]> => {
-    return new Promise((resolve) => {
+  getActivities: async (): Promise<ActivityTypeData[]> => {
+    return await new Promise((resolve) => {
       setTimeout(() => {
         resolve(activitiesData);
       }, 1);
     });
   },
 
-  getCallLoad: (): Promise<CallLoadData[]> => {
-    return new Promise((resolve) => {
+  getCallLoad: async (): Promise<CallLoadData[]> => {
+    return await new Promise((resolve) => {
       setTimeout(() => {
         resolve(callLoad);
       }, 1);

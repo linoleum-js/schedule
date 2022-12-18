@@ -7,21 +7,19 @@
   border-left: 1px solid var(--dark-grey);
   border-right: 1px solid var(--dark-grey);
   background-color: #fff;
-  z-index: 100;
+  z-index: 400;
   cursor: pointer;
   -webkit-user-select: none;
   user-select: none;
 }
 
 .intervalTableDividerLeft {
-  /* TODO calc */
   left: 200px;
-  /* TODO var for shadow */
   box-shadow: 7px 0px 19px 0px rgba(34, 60, 80, 0.38);
 }
 
 .intervalTableDividerRight {
-  right: 1px;
+  right: 20px;
   top: 0;
   box-shadow: -7px 0px 19px 0px rgba(34, 60, 80, 0.38);
   transform: translateX(100%);

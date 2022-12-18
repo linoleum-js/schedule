@@ -32,7 +32,6 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.list = action.payload;
-      console.log
     },
     fetchCallLoadFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
@@ -44,14 +43,14 @@ const slice = createSlice({
 export const { fetchCallLoadAction, fetchCallLoadSuccess, fetchCallLoadFailure } = slice.actions;
 
 type FetchCallLoadReturnType = Generator<
-  CallEffect<CallLoadData[]> | PutEffect <AnyAction>,
-  void,
-  CallLoadData[]
+CallEffect<CallLoadData[]> | PutEffect <AnyAction>,
+void,
+CallLoadData[]
 >;
 
 function* fetchCallLoad(): FetchCallLoadReturnType {
   try {
-    let list = yield call(Api.getCallLoad);
+    const list = yield call(Api.getCallLoad);
     yield put(fetchCallLoadSuccess(list));
   } catch (error: any) {
     yield put(fetchCallLoadFailure(error.message));

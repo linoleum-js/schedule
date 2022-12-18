@@ -14,14 +14,13 @@ export const addEmptyIntervals = (data: ScheduleData): ScheduleData => {
   const newList: IntervalData[] = [];
 
   list.forEach((item: IntervalData, index: number) => {
-    
     if (index === 0) {
       if (item.start !== 0) {
         newList.push(buildIntervalData(0, item.end, ActivityTypeEmpty));
       }
     } else {
       const prev: IntervalData = list[index - 1];
-      if (prev && prev.end !== item.start) {
+      if (prev !== undefined && prev.end !== item.start) {
         newList.push(buildIntervalData(prev.end, item.start, ActivityTypeEmpty));
       }
     }
@@ -39,7 +38,6 @@ export const addEmptyIntervals = (data: ScheduleData): ScheduleData => {
   };
 };
 
-// TODO refactor?
 export const mergeNeighbours = (list: IntervalData[], changedItemId?: string): IntervalData[] => {
   const newList: IntervalData[] = [];
   let prevType: ActivityType | null = null;
@@ -89,7 +87,6 @@ export const pixelsToMinutes = (pixel: number, stepSizeInMinutes: number, stepSi
 export const roundTo = (value: number, step: number) => {
   return Math.round(value / step) * step;
 };
-
 
 export const getDirection = (diff: number) => diff > 0 ? Direction.Right : Direction.Left;
 export const getSignedDistance = (diff: number, direction: Direction) => direction === Direction.Right ? diff : -diff;

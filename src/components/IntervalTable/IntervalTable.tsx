@@ -14,18 +14,17 @@ import {
   fetchScheduleAction, undoUpdateSchedule, redoUpdateSchedule, fetchActivitiesAction, fetchCallLoadAction
 } from '@/redux';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { formatDateDisplay, formatDate, parseDate } from '@/util';
+import { formatDateDisplay } from '@/util';
 
 import styles from './IntervalTable.module.css';
 
 export const IntervalTable = () => {
   const dispatch = useAppDispatch();
   const data = useAppSelector((state: AppState) => state.scheduleLists.present);
-  let [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const { list } = data;
 
   const dateString = searchParams.get('date') ?? formatDateDisplay(moment(Date.now()));
-  const date = parseDate(dateString);
 
   useEffect(() => {
     dispatch(fetchScheduleAction(dateString));
@@ -49,7 +48,6 @@ export const IntervalTable = () => {
     }
   };
 
-  // TODO dependencies?
   useEffect(() => {
     document.addEventListener('keydown', undoRedoHandler, false);
     return () => {
@@ -62,7 +60,19 @@ export const IntervalTable = () => {
       <IntervalDateNavigation />
       <div className={styles.intervalTable}>
         <IntervalTableChart />
+        <div className={styles.intervalHeaderNote}>
+          You can:
+          <ul>
+            <li>create</li>
+            <li>remove</li>
+            <li>resize</li>
+            <li>drag and drop items;</li>
+            <li>change item&apos;s type</li>
+            <li>navigate between dates</li>
+          </ul>
+        </div>
         <div className={styles.intervalHeaderWrapper}>
+
           <div className={styles.intervalTableNameHeader}>
             Full name
           </div>
